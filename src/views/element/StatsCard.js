@@ -6,28 +6,28 @@ import { Card, CardHeader, CardTitle, CardBody, CardText, Row, Col, Media } from
 const StatsCard = ({ cols }) => {
   const data = [
     {
-      title: '230k',
-      subtitle: 'Sales',
-      color: 'light-primary',
-      icon: <TrendingUp size={24} />
-    },
-    {
       title: '8.549k',
-      subtitle: 'Customers',
+      subtitle: 'Pengguna',
       color: 'light-info',
       icon: <User size={24} />
     },
     {
       title: '1.423k',
-      subtitle: 'Products',
+      subtitle: 'Gallery',
       color: 'light-danger',
       icon: <Box size={24} />
     },
     {
-      title: '$9745',
-      subtitle: 'Revenue',
-      color: 'light-success',
-      icon: <DollarSign size={24} />
+      title: '230k',
+      subtitle: 'Forum Artikel',
+      color: 'light-primary',
+      icon: <TrendingUp size={24} />
+    },
+    {
+      title: '230k',
+      subtitle: 'Bawaslu Update',
+      color: 'light-primary',
+      icon: <TrendingUp size={24} />
     }
   ]
 
@@ -57,7 +57,7 @@ const StatsCard = ({ cols }) => {
   return (
     <Card className='card-statistics'>
       <CardHeader>
-        <CardTitle tag='h4'>Statistics</CardTitle>
+        <CardTitle tag='h4'>Statistik</CardTitle>
         <CardText className='card-text font-small-2 mr-25 mb-0'></CardText>
       </CardHeader>
       <CardBody className='statistics-body'>
