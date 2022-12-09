@@ -3,11 +3,12 @@ import { useState, useEffect, Fragment } from 'react'
 import { useParams, Link, useHistory } from 'react-router-dom'
 
 // ** Store & Actions
-import { addGallery, updateGallery } from '../store/action'
+import { addArticle, updateArticle } from '../store/action'
 import { useSelector, useDispatch } from 'react-redux'
+import { getAllDataCategory } from '@src/views/backend/category/store/action'
 
 // ** Third Party Components
-import { User, Check, X, UploadCloud } from 'react-feather'
+import { User, Check, X } from 'react-feather'
 import { Card, CardBody, Row, Col, Button, Label, FormGroup, Input, Form, Media } from 'reactstrap'
 import { useForm, Controller } from 'react-hook-form'
 import classnames from 'classnames'
@@ -17,9 +18,13 @@ import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
 import Select from 'react-select'
 import logoDefault from '@src/assets/images/avatars/picture-blank.png'
-import Dropzone from 'react-dropzone'
+import ReactSummernote from 'react-summernote'
 
-const ToastGallery = ({ text }) => {
+// ** Styles
+import 'react-summernote/dist/react-summernote.css'
+import 'react-summernote/lang/summernote-id-ID'
+
+const ToastContent = ({ text }) => {
   if (text) {
     return (
       <Fragment>
@@ -51,14 +56,14 @@ const ToastGallery = ({ text }) => {
 // ** Styles
 import '@styles/react/apps/app-users.scss'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
-import '@styles/react/libs/file-uploader/file-uploader.scss'
 
 // ** Utils
 import { isObjEmpty, selectThemeColors } from '@utils'
 
-const GallerySave = () => {
+const ArticleSave = () => {
   // ** States & Vars
-  const store = useSelector(state => state.gallerys),
+  const store = useSelector(state => state.articles),
+    categorys = useSelector(state => state.categorys),
     dispatch = useDispatch(),
     { id } = useParams(),
     intl = useIntl()
@@ -68,20 +73,23 @@ const GallerySave = () => {
 
   // ** State
   const [data, setData] = useState(null)
-  const [selectedStatus, setSelectedStatus] = useState({label: "Select...", value: "1"})
+  const [selectedStatus, setSelectedStatus] = useState({label: "Select...", value: 3})
+  const [selectedCategory, setSelectedCategory] = useState(null)
   const [logo, setLogo] = useState({file: null, link: null})
-  const [photos, setPhotos] = useState([])
-  const [deletePhotos, setDeletePhotos] = useState([])
-  const [image, setImage] = useState({file: null, link: null})
+  const [desc, setDesc] = useState('')
 
   const status = [
     {
       value: 1,
-      label: "Active"
+      label: "Publish"
     }, 
     {
       value: 2,
-      label: "Deactive"
+      label: "UnPublish"
+    },
+    {
+      value: 3,
+      label: "Draft"
     }
   ]
 
@@ -93,39 +101,28 @@ const GallerySave = () => {
     if (store.selected !== null && store.selected !== undefined) {
       const find = status.find(r => r.value === store.selected.status)
       setSelectedStatus(find)
+      setSelectedCategory({label: store.selected.category_name, value: store.selected.category_name})
 
       const linkLogo = `${process.env.REACT_APP_BASE_URL}${store.selected.path_thumbnail}`
       setLogo({...logo, link: linkLogo})
-
-      setPhotos(store.selected.detail.map(data => {
-        return {
-          link: `${process.env.REACT_APP_BASE_URL}${data.path_image}`,
-          isCloud: true
-        }
-      }))
+      setDesc(store.selected.description)
     }
+
+    dispatch(getAllDataCategory())
     
   }, [dispatch])
-
-  useEffect(() => {
-    if (image.file) {
-      let oldPhotos = photos
-      oldPhotos = oldPhotos.concat(image)
-      setPhotos(oldPhotos)
-    }
-  }, [image])
 
   useEffect(() => {
 
     if (store.success) {
       toast.success(
-        <ToastGallery text={null} />,
+        <ToastContent text={null} />,
         { transition: Slide, hideProgressBar: true, autoClose: 3000 }
       )
-      history.push("/gallery/list")
+      history.push("/article/list")
     } else if (store.error) {
       toast.error(
-        <ToastGallery text={store.error} />,
+        <ToastContent text={store.error} />,
         { transition: Slide, hideProgressBar: true, autoClose: 3000 }
       )
     }
@@ -140,55 +137,18 @@ const GallerySave = () => {
       const datas = new FormData()
 
       datas.append('status', selectedStatus.value)
-      datas.append('folder_name', data.folder_name)
-      datas.append('description', data.description)
+      datas.append('category_name', selectedCategory?.label)
+      datas.append('title', data.title)
+      datas.append('description', desc)
       datas.append('image', logo.file)
 
-      for (const photo of photos) {
-        if (!photo.isCloud) {
-          datas.append('images', photo.file)
-        }
-      } 
-
       if (id) {
-        datas.append('image_delete', JSON.stringify(deletePhotos))
-        dispatch(updateGallery(id, datas))
+        dispatch(updateArticle(id, datas))
       } else {
-        dispatch(addGallery(datas))
+        dispatch(addArticle(datas))
       }
       
     }
-  }
-
-  const handleDropZone = (acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader()
-
-      reader.onabort = () => console.log('file reading was aborted')
-      reader.onerror = () => console.log('file reading has failed')
-      reader.onload = () => {
-      // Do whatever you want with the file contents
-        const blobURL = URL.createObjectURL(file)
-
-        setImage({
-          file, link: blobURL
-        })
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-
-  const handleRemovePhoto = (key) => {
-    let oldPhotos = photos
-    const oldDeletePhotos = deletePhotos
-    
-    if (oldPhotos[key].isCloud) {
-      oldDeletePhotos.push(oldPhotos[key].file.id)
-    }
-
-    oldPhotos = oldPhotos.filter((d, k) => k !== key)
-    setPhotos(oldPhotos)
-    setDeletePhotos(oldDeletePhotos)
   }
 
   const onChangeLogo = e => {
@@ -219,7 +179,7 @@ const GallerySave = () => {
                 <Col sm='12'>
                   <h4 className='mb-1'>
                     <User size={20} className='mr-50' />
-                    <span className='align-middle'>{`${isEdit ? 'Edit' : 'Tambah'} Gallery`}</span>
+                    <span className='align-middle'>{`${isEdit ? 'Edit' : 'Tambah'} Artikel`}</span>
                   </h4>
                 </Col>
                 {store.progress &&
@@ -244,18 +204,52 @@ const GallerySave = () => {
                     </Media>
                   </Media>
                 </Col>
-                <Col sm='12' md='8'>
+                <Col sm='12'>
                   <FormGroup>
-                    <Label for='folder_name'>Judul</Label>
+                    <Label for='title'>Judul</Label>
                     <Input
-                      id='folder_name'
-                      name='folder_name'
-                      defaultValue={isEdit ? store.selected.folder_name : ''}
+                      id='title'
+                      name='title'
+                      defaultValue={isEdit ? store.selected.title : ''}
                       placeholder='Judul'
                       innerRef={register({ required: true })}
                       className={classnames({
-                        'is-invalid': errors.folder_name
+                        'is-invalid': errors.title
                       })}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm='12' md='8'>
+                  <FormGroup>
+                    <Label for='category_name'>Kategori</Label>
+                    <Controller
+                      name='category_name'
+                      id='category_name'
+                      control={control}
+                      invalid={data !== null && (data.category_name === undefined || data.category_name === null)}
+                      defaultValue={selectedCategory}
+                      render={({value, onChange}) => {
+
+                        return (
+                          <Select
+                            isClearable={false}
+                            theme={selectThemeColors}
+                            className='react-select'
+                            classNamePrefix='select'
+                            options={categorys.allData.map(d => {
+                              return {
+                                label: d.category_name,
+                                value: d.category_name
+                              }
+                            })}
+                            value={selectedCategory}
+                            onChange={data => {
+                              onChange(data)
+                              setSelectedCategory(data)
+                            }}
+                          />
+                        )
+                      }}
                     />
                   </FormGroup>
                 </Col>
@@ -288,56 +282,35 @@ const GallerySave = () => {
                     />
                   </FormGroup>
                 </Col>
-                <Col sm='12' md='12'>
+                <Col sm='12'>
                   <FormGroup>
                     <Label for='description'>Deskripsi</Label>
-                    <Input
-                      id='description'
-                      name='description'
-                      type='textarea'
-                      defaultValue={isEdit ? store.selected.description : ''}
-                      placeholder='Deskripsi'
-                      innerRef={register({ required: false })}
-                      className={classnames({
-                        'is-invalid': errors.description
-                      })}
+                    <ReactSummernote
+                      value={desc}
+                      options={{
+                        lang: 'id-ID',
+                        height: 350,
+                        dialogsInBody: true,
+                        toolbar: [
+                          ['style', ['style']],
+                          ['font', ['bold', 'underline', 'clear']],
+                          ['fontname', ['fontname']],
+                          ['fontsize', ['fontsize']],
+                          ['para', ['ul', 'ol', 'paragraph']],
+                          ['table', ['table']],
+                          ['insert', ['link', 'picture', 'video']]
+                        ],
+                        fontSizes: ['8', '9', '10', '11', '12', '14', '18', '24', '36', '48']
+                      }}
+                      onChange={setDesc}
+                      onImageUpload={(files) => {
+
+                        // const datas = new FormData()
+                        // datas.append('upload', files[0])
+                        // dispatch(uploadImage(datas))
+                      }}
                     />
                   </FormGroup>
-                </Col>
-                <Col sm='12'>
-                  <Card>
-                    <CardBody>
-                      <Dropzone accept={{'image/*': []}} onDrop={acceptedFiles => handleDropZone(acceptedFiles)}>
-                        {({getRootProps, getInputProps}) => (
-                          <div {...getRootProps()} className='dropzone'>
-                            <input {...getInputProps()} />
-                            <div className="d-flex align-items-center justify-content-center flex-column">
-                              <UploadCloud size={100} className='mr-50' />
-                              <h5>Drop Photos here or click to upload</h5>
-                              <p className="text-secondary">Drop photos here or click <a href="#">browse</a> thorough your machine </p>
-                            </div>
-                          </div>
-                        )}
-                      </Dropzone>
-                      <ul className="my-2 list-group">
-                        {photos.map((data, key) => {
-
-                          return (
-                            <li className="d-flex align-items-center justify-content-between list-group-item" key={key}>
-                              <div className="file-details d-flex align-items-center">
-                                <div className="file-preview me-1 mr-2">
-                                  <img className="rounded" src={data.link} height="100" width="100" onError={(e) => (e.target.src = logoDefault)}/>
-                                </div>
-                              </div>
-                              <button type="button" onClick={() => handleRemovePhoto(key)} className="btn-icon btn btn-outline-danger btn-sm">
-                                <X size={12}/>
-                              </button>
-                            </li>
-                          )
-                        })}
-                      </ul>
-                    </CardBody>
-                  </Card>
                 </Col>
               </Row>
               <Row>
@@ -345,7 +318,7 @@ const GallerySave = () => {
                   <Button type='submit' color='primary' className='mb-1 mb-sm-0 mr-0 mr-sm-1'>
                     <FormattedMessage id='Save'/>
                   </Button>
-                  <Link to='/gallery/list'>
+                  <Link to='/article/list'>
                     <Button color='secondary' outline>
                       <FormattedMessage id='Back'/>
                     </Button>
@@ -359,4 +332,4 @@ const GallerySave = () => {
     </Row>
   )
 }
-export default GallerySave
+export default ArticleSave

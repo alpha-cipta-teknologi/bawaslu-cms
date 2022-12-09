@@ -10,6 +10,7 @@ const SpinnerComponent = () => {
         <div className="center" style={{background: `url(${logo})no-repeat`}}/>
         <div className="center2" style={{background: `url(${logo})no-repeat`}}/>
         <div className="center3" style={{background: `url(${logo})no-repeat`}}/>
+        <div className="back" style={{background: `url(${logo})no-repeat`}}/>
       </div>
     </div>
   )

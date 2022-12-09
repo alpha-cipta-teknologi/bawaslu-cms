@@ -55,7 +55,7 @@ import '@styles/react/apps/app-users.scss'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 
 // ** Utils
-import { isObjEmpty, dataURLtoFile, isUserLoggedIn } from '@utils'
+import { isObjEmpty, dataURLtoFile, isUserLoggedIn, selectThemeColors } from '@utils'
 
 const ProfileSave = () => {
   // ** States & Vars
@@ -72,6 +72,8 @@ const ProfileSave = () => {
   const [logo, setLogo] = useState({file: null, link: null})
   const [userData, setUserData] = useState(null)
   const [modalCamera, setModalCamera] = useState(false)
+  const [selectedProvince, setSelectedProvince] = useState(null)
+  const [selectedRegency, setSelectedRegency] = useState(null)
 
   // ** redirect
   const history = useHistory()
@@ -151,9 +153,12 @@ const ProfileSave = () => {
 
       datas.append('email', data.email)
       datas.append('image_foto', logo.file)
-      datas.append('first_name', data.first_name)
-      datas.append('last_name', data.last_name)
+      datas.append('full_name', data.full_name)
+      datas.append('place_of_birth', data.place_of_birth)
+      datas.append('date_of_birth', data.date_of_birth)
       datas.append('telepon', data.telepon)
+      datas.append('province_id', JSON.stringify(selectedProvince))
+      datas.append('regency_id', JSON.stringify(selectedRegency))
 
       dispatch(updateProfile(userData.resource_id, datas))
     }
@@ -202,30 +207,46 @@ const ProfileSave = () => {
                 </Col>
                 <Col lg='4' md='6'>
                   <FormGroup>
-                    <Label for='first_name'>Nama Depan</Label>
+                    <Label for='full_name'>Nama Lengkap</Label>
                     <Input
-                      id='first_name'
-                      name='first_name'
-                      defaultValue={store.selected.first_name}
-                      placeholder={'Nama Depan'}
+                      id='full_name'
+                      name='full_name'
+                      defaultValue={store.selected.full_name}
+                      placeholder={'Nama Lengkap'}
                       innerRef={register({ required: true })}
                       className={classnames({
-                        'is-invalid': errors.first_name
+                        'is-invalid': errors.full_name
                       })}
                     />
                   </FormGroup>
                 </Col>
                 <Col lg='4' md='6'>
                   <FormGroup>
-                    <Label for='last_name'>Nama Belakang</Label>
+                    <Label for='place_of_birth'>Tempat Lahir</Label>
                     <Input
-                      id='last_name'
-                      name='last_name'
-                      defaultValue={store.selected.last_name}
-                      placeholder={'Nama Belakang'}
+                      id='place_of_birth'
+                      name='place_of_birth'
+                      defaultValue={store.selected.place_of_birth}
+                      placeholder={'Tempat Lahir'}
                       innerRef={register({ required: true })}
                       className={classnames({
-                        'is-invalid': errors.last_name
+                        'is-invalid': errors.place_of_birth
+                      })}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col lg='4' md='6'>
+                  <FormGroup>
+                    <Label for='date_of_birth'>Tanggal Lahir</Label>
+                    <Input
+                      id='date_of_birth'
+                      name='date_of_birth'
+                      type='date'
+                      defaultValue={store.selected.date_of_birth}
+                      placeholder={'Tanggal Lahir'}
+                      innerRef={register({ required: true })}
+                      className={classnames({
+                        'is-invalid': errors.date_of_birth
                       })}
                     />
                   </FormGroup>
@@ -292,6 +313,64 @@ const ProfileSave = () => {
                       })}
                     />
                     {errors.password_confirm && <div className='invalid-feedback'>{errors.password_confirm.message}</div>}
+                  </FormGroup>
+                </Col>
+                <Col lg='4' md='6'>
+                  <FormGroup>
+                    <Label for='province_id'>Provinsi</Label>
+                    <Controller
+                      name='province_id'
+                      id='province_id'
+                      control={control}
+                      invalid={data !== null && (data.province_id === undefined || data.province_id === null)}
+                      defaultValue={selectedProvince}
+                      render={({value, onChange}) => {
+
+                        return (
+                          <Select
+                            isClearable={false}
+                            theme={selectThemeColors}
+                            className='react-select'
+                            classNamePrefix='select'
+                            options={[]}
+                            value={selectedProvince}
+                            onChange={data => {
+                              onChange(data)
+                              setSelectedProvince(data)
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col lg='4' md='6'>
+                  <FormGroup>
+                    <Label for='regency_id'>Kabupaten</Label>
+                    <Controller
+                      name='regency_id'
+                      id='regency_id'
+                      control={control}
+                      invalid={data !== null && (data.regency_id === undefined || data.regency_id === null)}
+                      defaultValue={selectedRegency}
+                      render={({value, onChange}) => {
+
+                        return (
+                          <Select
+                            isClearable={false}
+                            theme={selectThemeColors}
+                            className='react-select'
+                            classNamePrefix='select'
+                            options={[]}
+                            value={selectedRegency}
+                            onChange={data => {
+                              onChange(data)
+                              setSelectedRegency(data)
+                            }}
+                          />
+                        )
+                      }}
+                    />
                   </FormGroup>
                 </Col>
               </Row>

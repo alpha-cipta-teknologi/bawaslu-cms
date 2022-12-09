@@ -72,6 +72,54 @@ const Menu = [
       action: 'create',
       resource: 'gallery'
     }
+  },
+  {
+    path: '/bawaslu_update/list',
+    component: lazy(() => import('../../../views/backend/bawaslu_update/list')),
+    meta: {
+      action: 'read',
+      resource: 'bawaslu_update'
+    }
+  },
+  {
+    path: '/bawaslu_update/edit/:id',
+    component: lazy(() => import('../../../views/backend/bawaslu_update/save')),
+    meta: {
+      action: 'edit',
+      resource: 'bawaslu_update'
+    }
+  },
+  {
+    path: '/bawaslu_update/save',
+    component: lazy(() => import('../../../views/backend/bawaslu_update/save')),
+    meta: {
+      action: 'create',
+      resource: 'bawaslu_update'
+    }
+  },
+  {
+    path: '/article/list',
+    component: lazy(() => import('../../../views/backend/article/list')),
+    meta: {
+      action: 'read',
+      resource: 'article'
+    }
+  },
+  {
+    path: '/article/edit/:id',
+    component: lazy(() => import('../../../views/backend/article/save')),
+    meta: {
+      action: 'edit',
+      resource: 'article'
+    }
+  },
+  {
+    path: '/article/save',
+    component: lazy(() => import('../../../views/backend/article/save')),
+    meta: {
+      action: 'create',
+      resource: 'article'
+    }
   }
 ]
 

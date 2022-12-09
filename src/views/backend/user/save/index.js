@@ -72,8 +72,8 @@ const UserSave = () => {
   // ** State
   const [data, setData] = useState(null)
   const [selectedRole, setSelectedRole] = useState({value: '', label: 'Select...'})
-  const [selectedProvince, setSelectedProvince] = useState({value: '', label: 'Select...'})
-  const [selectedRegency, setSelectedRegency] = useState({value: '', label: 'Select...'})
+  const [selectedProvince, setSelectedProvince] = useState(null)
+  const [selectedRegency, setSelectedRegency] = useState(null)
   const [logo, setLogo] = useState({file: null, link: null})
   const [restrictRoll, setRestrictRoll] = useState([])
 
@@ -137,7 +137,6 @@ const UserSave = () => {
       datas.append('role_id', JSON.stringify(selectedRole))
       datas.append('province_id', JSON.stringify(selectedProvince))
       datas.append('regency_id', JSON.stringify(selectedRegency))
-      //datas.append('username', data.username)
       datas.append('full_name', data.full_name)
       datas.append('email', data.email)
       datas.append('status', data.status)
@@ -338,6 +337,64 @@ const UserSave = () => {
                 </Col>
                 <Col lg='4' md='6'>
                   <FormGroup>
+                    <Label for='province_id'>Provinsi</Label>
+                    <Controller
+                      name='province_id'
+                      id='province_id'
+                      control={control}
+                      invalid={data !== null && (data.province_id === undefined || data.province_id === null)}
+                      defaultValue={selectedProvince}
+                      render={({value, onChange}) => {
+
+                        return (
+                          <Select
+                            isClearable={false}
+                            theme={selectThemeColors}
+                            className='react-select'
+                            classNamePrefix='select'
+                            options={[]}
+                            value={selectedProvince}
+                            onChange={data => {
+                              onChange(data)
+                              setSelectedProvince(data)
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col lg='4' md='6'>
+                  <FormGroup>
+                    <Label for='regency_id'>Kabupaten</Label>
+                    <Controller
+                      name='regency_id'
+                      id='regency_id'
+                      control={control}
+                      invalid={data !== null && (data.regency_id === undefined || data.regency_id === null)}
+                      defaultValue={selectedRegency}
+                      render={({value, onChange}) => {
+
+                        return (
+                          <Select
+                            isClearable={false}
+                            theme={selectThemeColors}
+                            className='react-select'
+                            classNamePrefix='select'
+                            options={[]}
+                            value={selectedRegency}
+                            onChange={data => {
+                              onChange(data)
+                              setSelectedRegency(data)
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col lg='4' md='6'>
+                  <FormGroup>
                     <Label for='status'>Status</Label>
                     <Controller
                       as={Input}
@@ -404,20 +461,6 @@ const UserSave = () => {
                     </Media>
                   </Media>
                 </Col>
-                {/* <Col lg='4' md='6'>
-                  <FormGroup>
-                    <Label for='username'>Username</Label>
-                    <Input
-                      id='username'
-                      name='username'
-                      placeholder='Username'
-                      innerRef={register({ required: true })}
-                      className={classnames({
-                        'is-invalid': errors.username
-                      })}
-                    />
-                  </FormGroup>
-                </Col> */}
                 <Col lg='4' md='6'>
                   <FormGroup>
                     <Label for='full_name'>Nama Lengkap</Label>
@@ -536,6 +579,64 @@ const UserSave = () => {
                             onChange={data => {
                               onChange(data)
                               setSelectedRole(data)
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col lg='4' md='6'>
+                  <FormGroup>
+                    <Label for='province_id'>Provinsi</Label>
+                    <Controller
+                      name='province_id'
+                      id='province_id'
+                      control={control}
+                      invalid={data !== null && (data.province_id === undefined || data.province_id === null)}
+                      defaultValue={selectedProvince}
+                      render={({value, onChange}) => {
+
+                        return (
+                          <Select
+                            isClearable={false}
+                            theme={selectThemeColors}
+                            className='react-select'
+                            classNamePrefix='select'
+                            options={[]}
+                            value={selectedProvince}
+                            onChange={data => {
+                              onChange(data)
+                              setSelectedProvince(data)
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col lg='4' md='6'>
+                  <FormGroup>
+                    <Label for='regency_id'>Kabupaten</Label>
+                    <Controller
+                      name='regency_id'
+                      id='regency_id'
+                      control={control}
+                      invalid={data !== null && (data.regency_id === undefined || data.regency_id === null)}
+                      defaultValue={selectedRegency}
+                      render={({value, onChange}) => {
+
+                        return (
+                          <Select
+                            isClearable={false}
+                            theme={selectThemeColors}
+                            className='react-select'
+                            classNamePrefix='select'
+                            options={[]}
+                            value={selectedRegency}
+                            onChange={data => {
+                              onChange(data)
+                              setSelectedRegency(data)
                             }}
                           />
                         )

@@ -20,6 +20,8 @@ import globalparams from '@src/views/backend/global_param/store/reducer'
 import categorys from '@src/views/backend/category/store/reducer'
 import contents from '@src/views/backend/content/store/reducer'
 import gallerys from '@src/views/backend/gallery/store/reducer'
+import bawasluupdates from '@src/views/backend/bawaslu_update/store/reducer'
+import articles from '@src/views/backend/article/store/reducer'
 
 const rootReducer = combineReducers({
   navigations,
@@ -34,7 +36,9 @@ const rootReducer = combineReducers({
   globalparams,
   categorys,
   contents,
-  gallerys
+  gallerys,
+  bawasluupdates,
+  articles
 })
 
 export default rootReducer

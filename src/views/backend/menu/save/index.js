@@ -457,7 +457,7 @@ const MenuSave = () => {
                       name='status'
                       id='status'
                       control={control}
-                      defaultValue={'A'}
+                      defaultValue={'1'}
                     >
                       <option value='1'>Active</option>
                       <option value='2'>Deactive</option>
