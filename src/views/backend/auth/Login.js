@@ -53,7 +53,6 @@ const Login = props => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [playerid, setPlayerId] = useState('')
-  const [initialized, setInitialized] = useState(false)
   const [errorResponse, setErrorRespone] = useState('')
 
   const { register, errors, handleSubmit, setError, control } = useForm()
@@ -62,16 +61,14 @@ const Login = props => {
   useEffect(() => {
     
     connectOneSignal().on('notificationPermissionChange', function () {
-      setInitialized(true)
+      window.location = '/'
     })
 
-    setTimeout(() => {
-      connectOneSignal().getUserId(id => {
-        console.log(id)
-        setPlayerId(id)
-      })
-    }, 500)
-  }, [initialized])
+    connectOneSignal().getUserId(id => {
+      console.log(id)
+      setPlayerId(id)
+    })
+  }, [])
 
   const onSubmit = data => {
     if (isObjEmpty(errors)) {
