@@ -10,7 +10,7 @@ import { handleLogin } from '@store/actions/auth'
 import { AbilityContext } from '@src/utility/context/Can'
 import { Link, useHistory } from 'react-router-dom'
 import InputPasswordToggle from '@components/input-password-toggle'
-import { getHomeRouteForLoggedInUser, isObjEmpty, selectThemeColors } from '@utils'
+import { connectOneSignal, isObjEmpty, selectThemeColors } from '@utils'
 import { HelpCircle, Coffee } from 'react-feather'
 import {
   Alert,
@@ -26,7 +26,6 @@ import {
   Button,
   UncontrolledTooltip
 } from 'reactstrap'
-import OneSignal from 'react-onesignal'
 
 import Logo from '@src/assets/images/logo/logo.jpg'
 
@@ -54,20 +53,20 @@ const Login = props => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [playerid, setPlayerId] = useState('')
-  const [errorResponse, setErrorRespone] = useState('')
   const [initialized, setInitialized] = useState(false)
+  const [errorResponse, setErrorRespone] = useState('')
 
   const { register, errors, handleSubmit, setError, control } = useForm()
   const source = require(`@src/assets/images/pages/login.svg`).default
 
   useEffect(() => {
-    OneSignal.init({ 
-      appId: process.env.REACT_APP_ONESIGNAL_APPID
-    }).then(() => { 
-      OneSignal.on('notificationPermissionChange', function () {
-        setInitialized(true)
+    
+    connectOneSignal().on('notificationPermissionChange', function () {
+      setInitialized(true)
+      connectOneSignal().getUserId(id => {
+        console.log(id)
+        setPlayerId(id)
       })
-      OneSignal.getUserId(id => setPlayerId(id))
     })
   }, [initialized])
 
