@@ -64,11 +64,13 @@ const Login = props => {
     connectOneSignal().on('notificationPermissionChange', function () {
       setInitialized(true)
     })
-    
-    connectOneSignal().getUserId(id => {
-      console.log(id)
-      setPlayerId(id)
-    })
+
+    setTimeout(() => {
+      connectOneSignal().getUserId(id => {
+        console.log(id)
+        setPlayerId(id)
+      })
+    }, 500)
   }, [initialized])
 
   const onSubmit = data => {
