@@ -63,10 +63,11 @@ const Login = props => {
     
     connectOneSignal().on('notificationPermissionChange', function () {
       setInitialized(true)
-      connectOneSignal().getUserId(id => {
-        console.log(id)
-        setPlayerId(id)
-      })
+    })
+    
+    connectOneSignal().getUserId(id => {
+      console.log(id)
+      setPlayerId(id)
     })
   }, [initialized])
 

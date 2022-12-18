@@ -12,7 +12,7 @@ const App = props => {
         })
 
         defineOneSignal(OneSignal)
-    }, [])
+    })
 
     return <Router />
 }
