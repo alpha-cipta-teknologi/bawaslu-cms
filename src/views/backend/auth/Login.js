@@ -26,7 +26,7 @@ import {
   Button,
   UncontrolledTooltip
 } from 'reactstrap'
-import Select from 'react-select'
+import OneSignal from 'react-onesignal'
 
 import Logo from '@src/assets/images/logo/logo.jpg'
 
@@ -53,16 +53,29 @@ const Login = props => {
   const history = useHistory()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [playerid, setPlayerId] = useState('')
   const [errorResponse, setErrorRespone] = useState('')
+  const [initialized, setInitialized] = useState(false)
 
   const { register, errors, handleSubmit, setError, control } = useForm()
   const source = require(`@src/assets/images/pages/login.svg`).default
+
+  useEffect(() => {
+    OneSignal.init({ 
+      appId: process.env.REACT_APP_ONESIGNAL_APPID
+    }).then(() => { 
+      OneSignal.on('notificationPermissionChange', function () {
+        setInitialized(true)
+      })
+      OneSignal.getUserId(id => setPlayerId(id))
+    })
+  }, [initialized])
 
   const onSubmit = data => {
     if (isObjEmpty(errors)) {
       setErrorRespone('')
       useJwt
-        .login({ username, password })
+        .login({ username, password, playerid })
         .then(res => {
 
           if (res.data.status) {
