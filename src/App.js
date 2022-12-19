@@ -8,11 +8,8 @@ const App = props => {
 
     useEffect(() => {
         OneSignal.init({ 
-            appId: process.env.REACT_APP_ONESIGNAL_APPID,
-            subdomainName: "cms.jarimuawasipemilu.bawaslu.go.id"
+            appId: process.env.REACT_APP_ONESIGNAL_APPID
         })
-
-        OneSignal.setDefaultNotificationUrl("https://cms.jarimuawasipemilu.bawaslu.go.id")
 
         defineOneSignal(OneSignal)
     })
