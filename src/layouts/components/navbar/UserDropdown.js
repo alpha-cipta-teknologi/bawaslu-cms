@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import Avatar from '@components/avatar'
 
 // ** Utils
-import { isUserLoggedIn, formatTime, formatDate } from '@utils'
+import { isUserLoggedIn, connectOneSignal } from '@utils'
 
 // ** Store & Actions
 import { useDispatch, useSelector } from 'react-redux'
@@ -67,6 +67,9 @@ const UserDropdown = () => {
       const {userdata} = JSON.parse(localStorage.getItem('userData'))
       setUserData(userdata)
       dispatch(getDataProfile(userdata.resource_id))
+
+      //set external id onesignal
+      connectOneSignal().setExternalUserId(userdata.username)
     }
   }, [])
 

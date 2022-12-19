@@ -10,7 +10,7 @@ import { handleLogin } from '@store/actions/auth'
 import { AbilityContext } from '@src/utility/context/Can'
 import { Link, useHistory } from 'react-router-dom'
 import InputPasswordToggle from '@components/input-password-toggle'
-import { connectOneSignal, isObjEmpty, selectThemeColors } from '@utils'
+import { isObjEmpty, selectThemeColors } from '@utils'
 import { HelpCircle, Coffee } from 'react-feather'
 import {
   Alert,
@@ -52,29 +52,16 @@ const Login = props => {
   const history = useHistory()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [playerid, setPlayerId] = useState('')
   const [errorResponse, setErrorRespone] = useState('')
 
   const { register, errors, handleSubmit, setError, control } = useForm()
   const source = require(`@src/assets/images/pages/login.svg`).default
 
-  useEffect(() => {
-    
-    connectOneSignal().on('notificationPermissionChange', function () {
-      window.location = '/'
-    })
-
-    connectOneSignal().getUserId(id => {
-      console.log(id)
-      setPlayerId(id)
-    })
-  }, [])
-
   const onSubmit = data => {
     if (isObjEmpty(errors)) {
       setErrorRespone('')
       useJwt
-        .login({ username, password, playerid })
+        .login({ username, password })
         .then(res => {
 
           if (res.data.status) {
