@@ -120,6 +120,62 @@ const Menu = [
       action: 'create',
       resource: 'article'
     }
+  },
+  {
+    path: '/tema/list',
+    component: lazy(() => import('../../../views/backend/tema/list')),
+    meta: {
+      action: 'read',
+      resource: 'tema'
+    }
+  },
+  {
+    path: '/tema/edit/:id',
+    component: lazy(() => import('../../../views/backend/tema/save')),
+    meta: {
+      action: 'edit',
+      resource: 'tema'
+    }
+  },
+  {
+    path: '/tema/save',
+    component: lazy(() => import('../../../views/backend/tema/save')),
+    meta: {
+      action: 'create',
+      resource: 'tema'
+    }
+  },
+  {
+    path: '/komunitas/list',
+    component: lazy(() => import('../../../views/backend/komunitas/list')),
+    meta: {
+      action: 'read',
+      resource: 'komunitas'
+    }
+  },
+  {
+    path: '/komunitas/edit/:id',
+    component: lazy(() => import('../../../views/backend/komunitas/save')),
+    meta: {
+      action: 'edit',
+      resource: 'komunitas'
+    }
+  },
+  {
+    path: '/komunitas/save',
+    component: lazy(() => import('../../../views/backend/komunitas/save')),
+    meta: {
+      action: 'create',
+      resource: 'komunitas'
+    }
+  },
+  {
+    path: '/notification/list',
+    component: lazy(() => import('../../../views/backend/notification/list')),
+    meta: {
+      action: 'read',
+      resource: 'notification'
+    }
   }
 ]
 

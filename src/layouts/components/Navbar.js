@@ -3,7 +3,7 @@ import { Fragment, useEffect, useState } from 'react'
 
 // ** Dropdowns Imports
 import UserDropdown from './navbar/UserDropdown'
-import IntlDropdown from './navbar/IntlDropdown'
+import NotificationDropdown from './navbar/NotificationDropdown'
 
 // ** Custom Components
 import NavbarBookmarks from './navbar/NavbarBookmarks'
@@ -36,6 +36,7 @@ const CustomNavbar = props => {
         <NavbarBookmarks setMenuVisibility={setMenuVisibility} />
       </div>
       <ul className='nav navbar-nav align-items-center ml-auto'>
+        <NotificationDropdown />
         <UserDropdown />
       </ul>
     </Fragment>
