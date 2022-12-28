@@ -11,12 +11,17 @@ import { User, Check, X } from 'react-feather'
 import { Card, CardBody, Row, Col, Button, Label, FormGroup, Input, Form, Media } from 'reactstrap'
 import { useForm, Controller } from 'react-hook-form'
 import classnames from 'classnames'
+import ReactSummernote from 'react-summernote'
 import 'cleave.js/dist/addons/cleave-phone.us'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { toast, Slide } from 'react-toastify'
 import Avatar from '@components/avatar'
 import Select from 'react-select'
 import logoDefault from '@src/assets/images/avatars/picture-blank.png'
+
+// ** Styles
+import 'react-summernote/dist/react-summernote.css'
+import 'react-summernote/lang/summernote-id-ID'
 
 const ToastContent = ({ text }) => {
   if (text) {
@@ -66,15 +71,16 @@ const ContentSave = () => {
 
   // ** State
   const [data, setData] = useState(null)
-  const [selectedStatus, setSelectedStatus] = useState({label: "Select..."})
-  const [logo, setLogo] = useState({file: null, link: null})
-  const [video, setVideo] = useState({file: null, link: null})
+  const [selectedStatus, setSelectedStatus] = useState({ label: "Select..." })
+  const [logo, setLogo] = useState({ file: null, link: null })
+  const [video, setVideo] = useState({ file: null, link: null })
+  const [desc, setDesc] = useState('')
 
   const status = [
     {
       value: 1,
       label: "Active"
-    }, 
+    },
     {
       value: 2,
       label: "Deactive"
@@ -91,12 +97,13 @@ const ContentSave = () => {
       setSelectedStatus(find)
 
       const linkLogo = `${process.env.REACT_APP_BASE_URL}${store.selected.path_thumbnail}`
-      setLogo({...logo, link: linkLogo})
+      setLogo({ ...logo, link: linkLogo })
 
       const linkVideo = `${process.env.REACT_APP_BASE_URL}${store.selected.path_video}`
-      setVideo({...video, link: linkVideo})
+      setVideo({ ...video, link: linkVideo })
+      setDesc(store.selected.description)
     }
-    
+
   }, [dispatch])
 
   useEffect(() => {
@@ -128,7 +135,7 @@ const ContentSave = () => {
       datas.append('title', data.title)
       datas.append('seq', data.seq)
       datas.append('link_url', data.link_url)
-      datas.append('description', data.description)
+      datas.append('description', desc)
       datas.append('image', logo.file)
       datas.append('video', logo.file)
 
@@ -137,7 +144,7 @@ const ContentSave = () => {
       } else {
         dispatch(addContent(datas))
       }
-      
+
     }
   }
 
@@ -150,14 +157,14 @@ const ContentSave = () => {
 
     reader.onload = function () {
       const blobURL = URL.createObjectURL(files[0])
-      setLogo({file: files[0], link: blobURL})
+      setLogo({ file: files[0], link: blobURL })
     }
     reader.readAsDataURL(files[0])
   }
 
   const onChangeVideo = e => {
 
-    setVideo({file: null, link: null})
+    setVideo({ file: null, link: null })
 
     const reader = new FileReader(),
       files = e.target.files
@@ -167,7 +174,7 @@ const ContentSave = () => {
     setTimeout(() => {
       reader.onload = function (e) {
         const blobURL = URL.createObjectURL(files[0])
-        setVideo({file: files[0], link: blobURL})
+        setVideo({ file: files[0], link: blobURL })
       }
       reader.readAsDataURL(files[0])
     }, 500)
@@ -198,14 +205,14 @@ const ContentSave = () => {
                 <Col sm='12' md='6'>
                   <Media>
                     <Media className='mr-25' left>
-                      <Media object className='rounded mr-50' src={logo.link ? logo.link : logoDefault} alt='Icon' onError={() => setLogo({...logo, link: logoDefault})} width='100' />
+                      <Media object className='rounded mr-50' src={logo.link ? logo.link : logoDefault} alt='Icon' onError={() => setLogo({ ...logo, link: logoDefault })} width='100' />
                     </Media>
                     <Media className='mt-75 ml-1' body>
                       <Button.Ripple tag={Label} className='mr-75' size='sm' color='primary'>
                         Upload
                         <Input type='file' onChange={onChangeLogo} hidden accept='image/*' />
                       </Button.Ripple>
-                      <Button.Ripple style={{marginBottom: '4px'}} color='secondary' size='sm' outline onClick={() => setLogo({file: null, link: null})}>
+                      <Button.Ripple style={{ marginBottom: '4px' }} color='secondary' size='sm' outline onClick={() => setLogo({ file: null, link: null })}>
                         Reset
                       </Button.Ripple>
                       <p>Allowed JPG or PNG. Max size of 1MB</p>
@@ -217,16 +224,16 @@ const ContentSave = () => {
                     <Media className='mr-25' left>
                       {video.file ? (
                         <video width="300" controls>
-                          <source src={video.link}/>
+                          <source src={video.link} />
                         </video>) : (
-                          <>
-                            {video.link ? (
-                              <video width="300" controls>
-                                <source src={video.link}/>
-                              </video>) : (<Media object className='rounded mr-50' src={logoDefault} alt='video' width='100' />)
-                            }
-                          </>
-                        )
+                        <>
+                          {video.link ? (
+                            <video width="300" controls>
+                              <source src={video.link} />
+                            </video>) : (<Media object className='rounded mr-50' src={logoDefault} alt='video' width='100' />)
+                          }
+                        </>
+                      )
                       }
                     </Media>
                     <Media className='mt-75 ml-1' body>
@@ -234,7 +241,7 @@ const ContentSave = () => {
                         Upload
                         <Input type='file' onChange={onChangeVideo} hidden accept='video/mp4,video/x-m4v,video/*' />
                       </Button.Ripple>
-                      <Button.Ripple style={{marginBottom: '4px'}} color='secondary' size='sm' outline onClick={() => setVideo({file: null, link: null})}>
+                      <Button.Ripple style={{ marginBottom: '4px' }} color='secondary' size='sm' outline onClick={() => setVideo({ file: null, link: null })}>
                         Reset
                       </Button.Ripple>
                       <p>Allowed mp4. Max size of 10MB</p>
@@ -311,7 +318,7 @@ const ContentSave = () => {
                       control={control}
                       invalid={data !== null && (data.status === undefined || data.status === null)}
                       defaultValue={selectedStatus}
-                      render={({value, onChange}) => {
+                      render={({ value, onChange }) => {
 
                         return (
                           <Select
@@ -334,7 +341,7 @@ const ContentSave = () => {
                 <Col sm='12'>
                   <FormGroup>
                     <Label for='description'>Deskripsi</Label>
-                    <Input
+                    {/* <Input
                       id='description'
                       name='description'
                       type='textarea'
@@ -344,6 +351,25 @@ const ContentSave = () => {
                       className={classnames({
                         'is-invalid': errors.description
                       })}
+                    /> */}
+                    <ReactSummernote
+                      value={desc}
+                      options={{
+                        lang: 'id-ID',
+                        height: 350,
+                        dialogsInBody: true,
+                        toolbar: [
+                          ['style', ['style']],
+                          ['font', ['bold', 'underline', 'clear']],
+                          ['fontname', ['fontname']],
+                          ['fontsize', ['fontsize']],
+                          ['para', ['ul', 'ol', 'paragraph']],
+                          ['table', ['table']],
+                          ['insert', ['link', 'picture', 'video']]
+                        ],
+                        fontSizes: ['8', '9', '10', '11', '12', '14', '18', '24', '36', '48']
+                      }}
+                      onChange={setDesc}
                     />
                   </FormGroup>
                 </Col>
@@ -351,11 +377,11 @@ const ContentSave = () => {
               <Row>
                 <Col className='d-flex flex-sm-row flex-column mt-2'>
                   <Button type='submit' color='primary' className='mb-1 mb-sm-0 mr-0 mr-sm-1'>
-                    <FormattedMessage id='Save'/>
+                    <FormattedMessage id='Save' />
                   </Button>
                   <Link to='/content/list'>
                     <Button color='secondary' outline>
-                      <FormattedMessage id='Back'/>
+                      <FormattedMessage id='Back' />
                     </Button>
                   </Link>
                 </Col>
