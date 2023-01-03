@@ -111,13 +111,24 @@ export const columns = (number, ability) => {
       )
     },
     {
-      name: 'Kategori',
+      name: 'Komunitas',
       minWidth: '200px',
-      selector: 'category_name',
+      selector: 'komunitas',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {row.category_name}
+          {row.komunitas?.komunitas_name}
+        </div>
+      )
+    },
+    {
+      name: 'Tema',
+      minWidth: '200px',
+      selector: 'tema',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center hide-long-text'>
+          {row.tema?.tema_name}
         </div>
       )
     },

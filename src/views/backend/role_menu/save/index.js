@@ -198,7 +198,7 @@ const RoleMenuSave = () => {
             edit: 0,
             delete: 0,
             approve: 0,
-            status: "A"
+            status: 0
           })
         }
         
@@ -225,7 +225,7 @@ const RoleMenuSave = () => {
             edit: 1,
             delete: 0,
             approve: 0,
-            status: "A"
+            status: 0
           })
         }
         break
@@ -251,7 +251,7 @@ const RoleMenuSave = () => {
             edit: 0,
             delete: 1,
             approve: 0,
-            status: "A"
+            status: 0
           })
         }
     
@@ -278,7 +278,7 @@ const RoleMenuSave = () => {
             edit: 0,
             delete: 0,
             approve: 1,
-            status: "A"
+            status: 0
           })
         }
     
@@ -295,7 +295,7 @@ const RoleMenuSave = () => {
             edit: 0,
             delete: 0,
             approve: 0,
-            status: "A"
+            status: 0
           })
         }
 
