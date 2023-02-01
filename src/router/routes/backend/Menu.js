@@ -176,6 +176,54 @@ const Menu = [
       action: 'read',
       resource: 'notification'
     }
+  },
+  {
+    path: '/report_article/list',
+    component: lazy(() => import('../../../views/backend/report_article/list')),
+    meta: {
+      action: 'read',
+      resource: 'report_article'
+    }
+  },
+  {
+    path: '/report_article/edit/:id',
+    component: lazy(() => import('../../../views/backend/report_article/save')),
+    meta: {
+      action: 'edit',
+      resource: 'report_article'
+    }
+  },
+  {
+    path: '/report_article/save',
+    component: lazy(() => import('../../../views/backend/report_article/save')),
+    meta: {
+      action: 'create',
+      resource: 'report_article'
+    }
+  },
+  {
+    path: '/complaint/list',
+    component: lazy(() => import('../../../views/backend/complaint/list')),
+    meta: {
+      action: 'read',
+      resource: 'complaint'
+    }
+  },
+  {
+    path: '/complaint/edit/:id',
+    component: lazy(() => import('../../../views/backend/complaint/save')),
+    meta: {
+      action: 'edit',
+      resource: 'complaint'
+    }
+  },
+  {
+    path: '/complaint/save',
+    component: lazy(() => import('../../../views/backend/complaint/save')),
+    meta: {
+      action: 'create',
+      resource: 'complaint'
+    }
   }
 ]
 

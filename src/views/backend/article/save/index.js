@@ -95,9 +95,17 @@ const ArticleSave = () => {
     {
       value: 3,
       label: "Draft"
+    },
+    {
+      value: 4,
+      label: "Dilaporkan"
+    },
+    {
+      value: 5,
+      label: "Suspend"
     }
   ]
-
+  
   // ** redirect
   const history = useHistory()
 

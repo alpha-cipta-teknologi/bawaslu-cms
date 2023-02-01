@@ -1,43 +1,16 @@
 import axios from 'axios'
 
-// ** Get all Data
-export const getAllDataArticle = (params) => {
-  return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/forum/article/all-data`, {params}).then(response => {
-
-      const {data} = response
-
-      if (data.status) {
-        dispatch({
-          type: 'GET_ALL_DATA_ARTICLE',
-          data: data.data,
-          params
-        })
-      }
-    }).catch(err => {
-      const {response} = err
-      if (response.status === 404) {
-        dispatch({
-          type: 'GET_ALL_DATA_ARTICLE',
-          data: [],
-          params
-        })
-      }
-    })
-  }
-}
-
 // ** Get data on page or row change
-export const getDataArticle = params => {
+export const getDataComplaint = params => {
   return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/forum/article`, {params})
+    await axios.get(`${process.env.REACT_APP_BASE_URL}/report/complaint`, {params})
       .then(response => {
         const {data} = response
 
         if (data.status) {
 
           dispatch({
-            type: 'GET_DATA_ARTICLE',
+            type: 'GET_DATA_COMPLAINT',
             data: data.data.values,
             totalPages: data.data.total,
             params
@@ -47,7 +20,7 @@ export const getDataArticle = params => {
         const {response} = err
         if (response.status === 404) {
           dispatch({
-            type: 'GET_DATA_ARTICLE',
+            type: 'GET_DATA_COMPLAINT',
             data: [],
             totalPages: 0,
             params
@@ -58,39 +31,39 @@ export const getDataArticle = params => {
 }
 
 // ** Get
-export const getArticle = value => {
+export const getComplaint = value => {
   return async dispatch => {
     dispatch({
-      type: 'GET_ARTICLE',
+      type: 'GET_COMPLAINT',
       selected: value
     })
   }
 }
 
-// ** Add new Article
-export const addArticle = params => {
+// ** Add new Complaint
+export const addComplaint = params => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_ARTICLE'
+      type: 'REQUEST_COMPLAINT'
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/forum/article`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/report/complaint`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'ADD_ARTICLE',
+            type: 'ADD_COMPLAINT',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_ARTICLE'
+            type: 'SUCCESS_COMPLAINT'
           })
         } else {
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_COMPLAINT',
             error: data.message
           })
         }
@@ -102,52 +75,48 @@ export const addArticle = params => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_COMPLAINT',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_COMPLAINT',
             error: err.message
           })
         }
       })
       .finally(() => {
         dispatch({
-          type: 'RESET_ARTICLE'
+          type: 'RESET_COMPLAINT'
         })
       })
   }
 }
 
-// ** update Article
-export const updateArticle = (id, params, cb = null) => {
+// ** update Complaint
+export const updateComplaint = (id, params) => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_ARTICLE'
+      type: 'REQUEST_COMPLAINT'
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/forum/article/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/report/complaint/${id}`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'UPDATE_ARTICLE',
+            type: 'UPDATE_COMPLAINT',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_ARTICLE'
+            type: 'SUCCESS_COMPLAINT'
           })
-
-          if (cb) {
-            cb(data)
-          }
         } else {
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_COMPLAINT',
             error: data.message
           })
         }
@@ -159,35 +128,35 @@ export const updateArticle = (id, params, cb = null) => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_COMPLAINT',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_COMPLAINT',
             error: err.message
           })
         }
       }).finally(() => {
         dispatch({
-          type: 'RESET_ARTICLE'
+          type: 'RESET_COMPLAINT'
         })
       })
   }
 }
 
 // ** Delete
-export const deleteArticle = id => {
+export const deleteComplaint = id => {
   return (dispatch, getState) => {
     axios
-      .delete(`${process.env.REACT_APP_BASE_URL}/forum/article/${id}`)
+      .delete(`${process.env.REACT_APP_BASE_URL}/report/complaint/${id}`)
       .then(response => {
         dispatch({
-          type: 'DELETE_ARTICLE'
+          type: 'DELETE_COMPLAINT'
         })
       })
       .finally(() => {
-        dispatch(getDataArticle(getState().articles.params))
+        dispatch(getDataComplaint(getState().complaints.params))
       })
       .catch(err => console.log(err))
   }

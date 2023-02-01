@@ -1,43 +1,16 @@
 import axios from 'axios'
 
-// ** Get all Data
-export const getAllDataArticle = (params) => {
-  return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/forum/article/all-data`, {params}).then(response => {
-
-      const {data} = response
-
-      if (data.status) {
-        dispatch({
-          type: 'GET_ALL_DATA_ARTICLE',
-          data: data.data,
-          params
-        })
-      }
-    }).catch(err => {
-      const {response} = err
-      if (response.status === 404) {
-        dispatch({
-          type: 'GET_ALL_DATA_ARTICLE',
-          data: [],
-          params
-        })
-      }
-    })
-  }
-}
-
 // ** Get data on page or row change
-export const getDataArticle = params => {
+export const getDataReportArticle = params => {
   return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/forum/article`, {params})
+    await axios.get(`${process.env.REACT_APP_BASE_URL}/report/article`, {params})
       .then(response => {
         const {data} = response
 
         if (data.status) {
 
           dispatch({
-            type: 'GET_DATA_ARTICLE',
+            type: 'GET_DATA_REPORT_ARTICLE',
             data: data.data.values,
             totalPages: data.data.total,
             params
@@ -47,7 +20,7 @@ export const getDataArticle = params => {
         const {response} = err
         if (response.status === 404) {
           dispatch({
-            type: 'GET_DATA_ARTICLE',
+            type: 'GET_DATA_REPORT_ARTICLE',
             data: [],
             totalPages: 0,
             params
@@ -58,39 +31,39 @@ export const getDataArticle = params => {
 }
 
 // ** Get
-export const getArticle = value => {
+export const getReportArticle = value => {
   return async dispatch => {
     dispatch({
-      type: 'GET_ARTICLE',
+      type: 'GET_REPORT_ARTICLE',
       selected: value
     })
   }
 }
 
-// ** Add new Article
-export const addArticle = params => {
+// ** Add new ReportArticle
+export const addReportArticle = params => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_ARTICLE'
+      type: 'REQUEST_REPORT_ARTICLE'
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/forum/article`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/report/article`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'ADD_ARTICLE',
+            type: 'ADD_REPORT_ARTICLE',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_ARTICLE'
+            type: 'SUCCESS_REPORT_ARTICLE'
           })
         } else {
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_REPORT_ARTICLE',
             error: data.message
           })
         }
@@ -102,52 +75,48 @@ export const addArticle = params => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_REPORT_ARTICLE',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_REPORT_ARTICLE',
             error: err.message
           })
         }
       })
       .finally(() => {
         dispatch({
-          type: 'RESET_ARTICLE'
+          type: 'RESET_REPORT_ARTICLE'
         })
       })
   }
 }
 
-// ** update Article
-export const updateArticle = (id, params, cb = null) => {
+// ** update ReportArticle
+export const updateReportArticle = (id, params) => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_ARTICLE'
+      type: 'REQUEST_REPORT_ARTICLE'
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/forum/article/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/report/article/${id}`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'UPDATE_ARTICLE',
+            type: 'UPDATE_REPORT_ARTICLE',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_ARTICLE'
+            type: 'SUCCESS_REPORT_ARTICLE'
           })
-
-          if (cb) {
-            cb(data)
-          }
         } else {
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_REPORT_ARTICLE',
             error: data.message
           })
         }
@@ -159,35 +128,35 @@ export const updateArticle = (id, params, cb = null) => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_REPORT_ARTICLE',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_ARTICLE',
+            type: 'ERROR_REPORT_ARTICLE',
             error: err.message
           })
         }
       }).finally(() => {
         dispatch({
-          type: 'RESET_ARTICLE'
+          type: 'RESET_REPORT_ARTICLE'
         })
       })
   }
 }
 
 // ** Delete
-export const deleteArticle = id => {
+export const deleteReportArticle = id => {
   return (dispatch, getState) => {
     axios
-      .delete(`${process.env.REACT_APP_BASE_URL}/forum/article/${id}`)
+      .delete(`${process.env.REACT_APP_BASE_URL}/report/article/${id}`)
       .then(response => {
         dispatch({
-          type: 'DELETE_ARTICLE'
+          type: 'DELETE_REPORT_ARTICLE'
         })
       })
       .finally(() => {
-        dispatch(getDataArticle(getState().articles.params))
+        dispatch(getDataReportArticle(getState().reportarticles.params))
       })
       .catch(err => console.log(err))
   }

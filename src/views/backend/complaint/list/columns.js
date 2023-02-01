@@ -2,47 +2,30 @@
 import { Link } from 'react-router-dom'
 
 // ** Store & Actions
-import { getContent, deleteContent } from '../store/action'
+import { getComplaint, deleteComplaint } from '../store/action'
+import { getArticle } from '@src/views/backend/article/store/action'
 import { store } from '@store/storeConfig/store'
 
 // ** Third Party Components
 import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Media } from 'reactstrap'
-import { MoreVertical, Trash2, Archive } from 'react-feather'
+import { MoreVertical, Trash2, Archive, Eye, Edit2, Link2, CheckCircle } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import logoDefault from '@src/assets/images/avatars/picture-blank.png'
+import moment from 'moment/moment'
 
 const MySwal = withReactContent(Swal)
 
-const handleDelete = (row) => {
-  return MySwal.fire({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    customClass: {
-      confirmButton: 'btn btn-primary',
-      cancelButton: 'btn btn-danger ml-1'
-    },
-    buttonsStyling: false
-  }).then(function (result) {
-    if (result.value) {
-      store.dispatch(deleteContent(row.id))
-    }
-  })
-}
-
 const statusObj = {
   1: {
-    color: 'light-success',
-    value: 'Active'
+    color: 'light-warning',
+    value: 'Pengaduan'
   },
   2: {
-    color: 'light-danger',
-    value: 'Deactive'
+    color: 'light-success',
+    value: 'Verifikasi'
   }
 }
 
@@ -62,21 +45,27 @@ export const columns = (number, ability) => {
             <MoreVertical size={14} className='cursor-pointer' />
           </DropdownToggle>
           <DropdownMenu right>
-            {ability.can('edit', 'content') &&
+            <DropdownItem
+              tag={Link}
+              to={'#'}
+              className='w-100'
+              onClick={() => {
+                const http = row.link_berita.includes('http') ? '' : 'https://'
+                window.open(`${http + row.link_berita}`, '_blank')
+              }}
+            >
+              <Link2 size={14} className='mr-50' />
+              <span className='align-middle'>Link Berita</span>
+            </DropdownItem>
+            {ability.can('edit', 'complaint') &&
               <DropdownItem
                 tag={Link}
-                to={`/content/edit/${row.id}`}
+                to={`/complaint/edit/${row.id}`}
                 className='w-100'
-                onClick={() => store.dispatch(getContent(row))}
+                onClick={() => store.dispatch(getComplaint(row))}
               >
-                <Archive size={14} className='mr-50' />
-                <span className='align-middle'>Edit</span>
-              </DropdownItem>
-            }
-            {ability.can('delete', 'content') &&
-              <DropdownItem className='w-100' onClick={() => handleDelete(row)}>
-                <Trash2 size={14} className='mr-50' />
-                <span className='align-middle'><FormattedMessage id='Delete'/></span>
+                <CheckCircle size={14} className='mr-50' />
+                <span className='align-middle'>Verifikasi</span>
               </DropdownItem>
             }
           </DropdownMenu>
@@ -95,30 +84,19 @@ export const columns = (number, ability) => {
       )
     },
     {
-      name: 'Image',
-      maxWidth: '50px',
-      selector: 'image',
+      name: 'Jenis Aduan',
+      minWidth: '200px',
+      selector: 'jenis_aduan',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          <Media object className='rounded mr-50' src={`${process.env.REACT_APP_BASE_URL}${row.image ?? ''}`} onError={(e) => (e.target.src = logoDefault)} height='50' width='50' />
-        </div>
-      )
-    },
-    {
-      name: 'Header',
-      maxWidth: '200px',
-      selector: 'header',
-      sortable: false,
-      cell: row => (
-        <div className='d-flex justify-content-left align-items-center hide-long-text'>
-          {row.header}
+          {row.jenis_aduan}
         </div>
       )
     },
     {
       name: 'Judul',
-      maxWidth: '300px',
+      minWidth: '400px',
       selector: 'title',
       sortable: false,
       cell: row => (
@@ -128,24 +106,35 @@ export const columns = (number, ability) => {
       )
     },
     {
-      name: 'Deskripsi Pendek',
-      maxWidth: '200px',
-      selector: 'sort_description',
+      name: 'Provinsi',
+      minWidth: '100px',
+      selector: 'province',
       sortable: false,
       cell: row => (
-        <div className='d-flex justify-content-left align-items-center hide-long-text'>
-          {row.sort_description}
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.province?.name}
         </div>
       )
     },
     {
-      name: 'Urutan',
-      maxWidth: '50px',
-      selector: 'seq',
+      name: 'Kabupaten',
+      minWidth: '100px',
+      selector: 'regency',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {row.seq}
+          {row.regency?.name}
+        </div>
+      )
+    },
+    {
+      name: 'Tanggal Buat Laporan',
+      minWidth: '200px',
+      selector: 'created_date',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {moment(row.created_date).format('DD-MM-YYYY HH:II')}
         </div>
       )
     }

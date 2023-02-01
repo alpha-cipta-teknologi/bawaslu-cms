@@ -2,12 +2,13 @@
 import { Link } from 'react-router-dom'
 
 // ** Store & Actions
-import { getArticle, deleteArticle } from '../store/action'
+import { getReportArticle, deleteReportArticle } from '../store/action'
+import { getArticle } from '@src/views/backend/article/store/action'
 import { store } from '@store/storeConfig/store'
 
 // ** Third Party Components
 import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Media } from 'reactstrap'
-import { MoreVertical, Trash2, Archive } from 'react-feather'
+import { MoreVertical, Trash2, Archive, Eye, CheckCircle, Link2 } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 
 import Swal from 'sweetalert2'
@@ -31,12 +32,23 @@ const handleDelete = (row) => {
     buttonsStyling: false
   }).then(function (result) {
     if (result.value) {
-      store.dispatch(deleteArticle(row.id))
+      store.dispatch(deleteReportArticle(row.id))
     }
   })
 }
 
 const statusObj = {
+  1: {
+    color: 'light-warning',
+    value: 'Pengaduan'
+  },
+  2: {
+    color: 'light-success',
+    value: 'Verifikasi'
+  }
+}
+
+const statusObjArticle = {
   1: {
     color: 'light-success',
     value: 'Publish'
@@ -75,21 +87,29 @@ export const columns = (number, ability) => {
             <MoreVertical size={14} className='cursor-pointer' />
           </DropdownToggle>
           <DropdownMenu right>
-            {ability.can('edit', 'article') &&
+            <DropdownItem
+              tag={Link}
+              to={'#'}
+              className='w-100'
+              onClick={() => {
+                window.open(`${process.env.REACT_APP_BASE_FE_URL}/forum/${row.article?.slug}`, '_blank')
+              }}
+            >
+              <Link2 size={14} className='mr-50' />
+              <span className='align-middle'>Link Artikel</span>
+            </DropdownItem>
+            {ability.can('edit', 'report_article') &&
               <DropdownItem
                 tag={Link}
-                to={`/article/edit/${row.id}`}
+                to={`/report_article/edit/${row.id}`}
                 className='w-100'
-                onClick={() => store.dispatch(getArticle(row))}
+                onClick={() => {
+                  store.dispatch(getArticle(row.article))
+                  store.dispatch(getReportArticle(row))
+                }}
               >
-                <Archive size={14} className='mr-50' />
-                <span className='align-middle'>Edit</span>
-              </DropdownItem>
-            }
-            {ability.can('delete', 'article') &&
-              <DropdownItem className='w-100' onClick={() => handleDelete(row)}>
-                <Trash2 size={14} className='mr-50' />
-                <span className='align-middle'><FormattedMessage id='Delete'/></span>
+                <CheckCircle size={14} className='mr-50' />
+                <span className='align-middle'>Verifikasi</span>
               </DropdownItem>
             }
           </DropdownMenu>
@@ -98,12 +118,23 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Status',
-      maxWidth: '50px',
+      minWidth: '50px',
       selector: 'status',
       sortable: false,
       cell: row => (
         <Badge className='text-capitalize' color={statusObj[row.status]?.color} pill>
           {statusObj[row.status]?.value}
+        </Badge>
+      )
+    },
+    {
+      name: 'Status Artikel',
+      minWidth: '50px',
+      selector: 'status',
+      sortable: false,
+      cell: row => (
+        <Badge className='text-capitalize' color={statusObjArticle[row.article?.status]?.color} pill>
+          {statusObjArticle[row.article?.status]?.value}
         </Badge>
       )
     },
@@ -114,29 +145,18 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          <Media object className='rounded mr-50' src={`${process.env.REACT_APP_BASE_URL}${row.path_thumbnail ?? ''}`} onError={(e) => (e.target.src = logoDefault)} height='50' width='50' />
+          <Media object className='rounded mr-50' src={`${process.env.REACT_APP_BASE_URL}${row.article?.path_thumbnail ?? ''}`} onError={(e) => (e.target.src = logoDefault)} height='50' width='50' />
         </div>
       )
     },
     {
-      name: 'Komunitas',
-      minWidth: '200px',
-      selector: 'komunitas',
+      name: 'Kategori',
+      minWidth: '100px',
+      selector: 'category_name',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {row.komunitas?.komunitas_name}
-        </div>
-      )
-    },
-    {
-      name: 'Tema',
-      minWidth: '200px',
-      selector: 'tema',
-      sortable: false,
-      cell: row => (
-        <div className='d-flex justify-content-left align-items-center hide-long-text'>
-          {row.tema?.tema_name}
+          {row.article?.category_name}
         </div>
       )
     },
@@ -147,73 +167,18 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center hide-long-text'>
-          {row.title}
+          {row.article?.title}
         </div>
       )
     },
     {
-      name: 'Penulis',
-      minWidth: '200px',
-      selector: 'author',
-      sortable: false,
-      cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
-          {row.author.full_name}
-        </div>
-      )
-    },
-    {
-      name: 'Tanggal Buat',
+      name: 'Tanggal Buat Laporan',
       minWidth: '200px',
       selector: 'created_date',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {moment(row.created_date).format('DD-MM-YYYY')}
-        </div>
-      )
-    },
-    {
-      name: 'Lihat',
-      maxWidth: '50px',
-      selector: 'counter_view',
-      sortable: false,
-      cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
-          {row.counter_view}
-        </div>
-      )
-    },
-    {
-      name: 'Suka',
-      maxWidth: '50px',
-      selector: 'counter_like',
-      sortable: false,
-      cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
-          {row.counter_like}
-        </div>
-      )
-    },
-    {
-      name: 'Komentar',
-      maxWidth: '50px',
-      selector: 'counter_comment',
-      sortable: false,
-      cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
-          {row.counter_comment}
-        </div>
-      )
-    },
-    {
-      name: 'Bagikan',
-      maxWidth: '50px',
-      selector: 'counter_share',
-      sortable: false,
-      cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
-          {row.counter_share}
+          {moment(row.created_date).format('DD-MM-YYYY HH:II')}
         </div>
       )
     }

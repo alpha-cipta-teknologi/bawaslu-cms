@@ -25,6 +25,9 @@ import bawasluupdates from '@src/views/backend/bawaslu_update/store/reducer'
 import articles from '@src/views/backend/article/store/reducer'
 import temas from '@src/views/backend/tema/store/reducer'
 import komunitass from '@src/views/backend/komunitas/store/reducer'
+// ** report
+import reportarticles from '@src/views/backend/report_article/store/reducer'
+import complaints from '@src/views/backend/complaint/store/reducer'
 
 const rootReducer = combineReducers({
   navigations,
@@ -44,7 +47,9 @@ const rootReducer = combineReducers({
   bawasluupdates,
   articles,
   temas,
-  komunitass
+  komunitass,
+  reportarticles,
+  complaints
 })
 
 export default rootReducer
