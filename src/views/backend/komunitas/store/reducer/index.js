@@ -15,7 +15,7 @@ const initialState = {
 const reducers = (state = initialState, action) => {
   switch (action.type) {
     case 'GET_ALL_DATA_KOMUNITAS':
-      return { ...state, allData: action.data, params: action.params }
+      return { ...state, allData: action.data }
     case 'GET_DATA_KOMUNITAS':
       return {
         ...state,

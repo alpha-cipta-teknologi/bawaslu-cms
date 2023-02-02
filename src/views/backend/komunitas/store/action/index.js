@@ -1,17 +1,16 @@
 import axios from 'axios'
 
 // ** Get all Data
-export const getAllDataKomunitas = (params, cb = null) => {
+export const getAllDataKomunitas = (cb = null) => {
   return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/all-data`, {params}).then(response => {
+    await axios.get(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/all-data`).then(response => {
 
       const {data} = response
 
       if (data.status) {
         dispatch({
           type: 'GET_ALL_DATA_KOMUNITAS',
-          data: data.data,
-          params
+          data: data.data
         })
 
         if (cb) {
@@ -23,8 +22,7 @@ export const getAllDataKomunitas = (params, cb = null) => {
       if (response.status === 404) {
         dispatch({
           type: 'GET_ALL_DATA_KOMUNITAS',
-          data: [],
-          params
+          data: []
         })
       }
     })

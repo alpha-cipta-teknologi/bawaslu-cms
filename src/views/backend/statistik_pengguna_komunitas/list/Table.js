@@ -130,7 +130,7 @@ const ClassList = () => {
       }
     }))
 
-    dispatch(getAllDataKomunitas({}, d => {
+    dispatch(getAllDataKomunitas(d => {
       setDataKomunitas(d.map(r => {
         return {
           label: r.komunitas_name,
