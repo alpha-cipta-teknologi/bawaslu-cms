@@ -178,7 +178,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {moment(row.created_date).format('DD-MM-YYYY HH:II')}
+          {moment(row.created_date).format('DD-MM-YYYY HH:mm')}
         </div>
       )
     }
