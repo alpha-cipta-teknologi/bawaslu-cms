@@ -1,47 +1,16 @@
 import axios from 'axios'
 
-// ** Get all Data
-export const getAllDataKomunitas = (params, cb = null) => {
-  return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/all-data`, {params}).then(response => {
-
-      const {data} = response
-
-      if (data.status) {
-        dispatch({
-          type: 'GET_ALL_DATA_KOMUNITAS',
-          data: data.data,
-          params
-        })
-
-        if (cb) {
-          cb(data.data)
-        }
-      }
-    }).catch(err => {
-      const {response} = err
-      if (response.status === 404) {
-        dispatch({
-          type: 'GET_ALL_DATA_KOMUNITAS',
-          data: [],
-          params
-        })
-      }
-    })
-  }
-}
-
 // ** Get data on page or row change
-export const getDataKomunitas = params => {
+export const getDataStatistikPengguna = params => {
   return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/reff/komunitas`, {params})
+    await axios.get(`${process.env.REACT_APP_BASE_URL}/report/summary/pengguna`, {params})
       .then(response => {
         const {data} = response
 
         if (data.status) {
 
           dispatch({
-            type: 'GET_DATA_KOMUNITAS',
+            type: 'GET_DATA_STATISTIK_PENGGUNA',
             data: data.data.values,
             totalPages: data.data.total,
             params
@@ -51,7 +20,7 @@ export const getDataKomunitas = params => {
         const {response} = err
         if (response.status === 404) {
           dispatch({
-            type: 'GET_DATA_KOMUNITAS',
+            type: 'GET_DATA_STATISTIK_PENGGUNA',
             data: [],
             totalPages: 0,
             params
@@ -62,39 +31,39 @@ export const getDataKomunitas = params => {
 }
 
 // ** Get
-export const getKomunitas = value => {
+export const getStatistikPengguna = value => {
   return async dispatch => {
     dispatch({
-      type: 'GET_KOMUNITAS',
+      type: 'GET_STATISTIK_PENGGUNA',
       selected: value
     })
   }
 }
 
-// ** Add new Komunitas
-export const addKomunitas = params => {
+// ** Add new StatistikPengguna
+export const addStatistikPengguna = params => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_KOMUNITAS'
+      type: 'REQUEST_STATISTIK_PENGGUNA'
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/reff/komunitas`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/report/summary/pengguna`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'ADD_KOMUNITAS',
+            type: 'ADD_STATISTIK_PENGGUNA',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_KOMUNITAS'
+            type: 'SUCCESS_STATISTIK_PENGGUNA'
           })
         } else {
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_STATISTIK_PENGGUNA',
             error: data.message
           })
         }
@@ -106,48 +75,48 @@ export const addKomunitas = params => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_STATISTIK_PENGGUNA',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_STATISTIK_PENGGUNA',
             error: err.message
           })
         }
       })
       .finally(() => {
         dispatch({
-          type: 'RESET_KOMUNITAS'
+          type: 'RESET_STATISTIK_PENGGUNA'
         })
       })
   }
 }
 
-// ** update Komunitas
-export const updateKomunitas = (id, params) => {
+// ** update StatistikPengguna
+export const updateStatistikPengguna = (id, params) => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_KOMUNITAS'
+      type: 'REQUEST_STATISTIK_PENGGUNA'
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/report/summary/pengguna/${id}`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'UPDATE_KOMUNITAS',
+            type: 'UPDATE_STATISTIK_PENGGUNA',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_KOMUNITAS'
+            type: 'SUCCESS_STATISTIK_PENGGUNA'
           })
         } else {
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_STATISTIK_PENGGUNA',
             error: data.message
           })
         }
@@ -159,35 +128,35 @@ export const updateKomunitas = (id, params) => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_STATISTIK_PENGGUNA',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_STATISTIK_PENGGUNA',
             error: err.message
           })
         }
       }).finally(() => {
         dispatch({
-          type: 'RESET_KOMUNITAS'
+          type: 'RESET_STATISTIK_PENGGUNA'
         })
       })
   }
 }
 
 // ** Delete
-export const deleteKomunitas = id => {
+export const deleteStatistikPengguna = id => {
   return (dispatch, getState) => {
     axios
-      .delete(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/${id}`)
+      .delete(`${process.env.REACT_APP_BASE_URL}/report/summary/pengguna/${id}`)
       .then(response => {
         dispatch({
-          type: 'DELETE_KOMUNITAS'
+          type: 'DELETE_STATISTIK_PENGGUNA'
         })
       })
       .finally(() => {
-        dispatch(getDataKomunitas(getState().komunitass.params))
+        dispatch(getDataStatistikPengguna(getState().statistikpenggunas.params))
       })
       .catch(err => console.log(err))
   }

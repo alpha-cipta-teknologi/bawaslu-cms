@@ -107,7 +107,7 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Provinsi',
-      minWidth: '100px',
+      minWidth: '150px',
       selector: 'province',
       sortable: false,
       cell: row => (
@@ -117,13 +117,46 @@ export const columns = (number, ability) => {
       )
     },
     {
-      name: 'Kabupaten',
-      minWidth: '100px',
+      name: 'Kota / Kabupaten',
+      minWidth: '150px',
       selector: 'regency',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
           {row.regency?.name}
+        </div>
+      )
+    },
+    {
+      name: 'Penulis',
+      minWidth: '150px',
+      selector: 'author',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.full_name}
+        </div>
+      )
+    },
+    {
+      name: 'Provinsi Penulis',
+      minWidth: '150px',
+      selector: 'province',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.province}
+        </div>
+      )
+    },
+    {
+      name: 'Kota / Kabupaten Penulis',
+      minWidth: '150px',
+      selector: 'regency',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.regency}
         </div>
       )
     },

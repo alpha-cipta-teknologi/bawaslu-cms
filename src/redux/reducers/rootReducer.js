@@ -28,6 +28,9 @@ import komunitass from '@src/views/backend/komunitas/store/reducer'
 // ** report
 import reportarticles from '@src/views/backend/report_article/store/reducer'
 import complaints from '@src/views/backend/complaint/store/reducer'
+import hasilcekfaktas from '@src/views/backend/hasil_cek_fakta/store/reducer'
+import statistikpenggunas from '@src/views/backend/statistik_pengguna/store/reducer'
+import statistikpenggunakomunitass from '@src/views/backend/statistik_pengguna_komunitas/store/reducer'
 
 const rootReducer = combineReducers({
   navigations,
@@ -49,7 +52,10 @@ const rootReducer = combineReducers({
   temas,
   komunitass,
   reportarticles,
-  complaints
+  complaints,
+  hasilcekfaktas,
+  statistikpenggunas,
+  statistikpenggunakomunitass
 })
 
 export default rootReducer

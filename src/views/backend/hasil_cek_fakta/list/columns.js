@@ -2,13 +2,12 @@
 import { Link } from 'react-router-dom'
 
 // ** Store & Actions
-import { getReportArticle, deleteReportArticle } from '../store/action'
-import { getArticle } from '@src/views/backend/article/store/action'
+import { getHasilCekFakta, deleteHasilCekFakta } from '../store/action'
 import { store } from '@store/storeConfig/store'
 
 // ** Third Party Components
 import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Media } from 'reactstrap'
-import { MoreVertical, Trash2, Archive, Eye, CheckCircle, Link2 } from 'react-feather'
+import { MoreVertical, Trash2, Archive } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 
 import Swal from 'sweetalert2'
@@ -32,23 +31,12 @@ const handleDelete = (row) => {
     buttonsStyling: false
   }).then(function (result) {
     if (result.value) {
-      store.dispatch(deleteReportArticle(row.id))
+      store.dispatch(deleteHasilCekFakta(row.id))
     }
   })
 }
 
 const statusObj = {
-  1: {
-    color: 'light-warning',
-    value: 'Pengaduan'
-  },
-  2: {
-    color: 'light-success',
-    value: 'Verifikasi'
-  }
-}
-
-const statusObjArticle = {
   1: {
     color: 'light-success',
     value: 'Publish'
@@ -60,14 +48,6 @@ const statusObjArticle = {
   3: {
     color: 'light-secondary',
     value: 'Draft'
-  },
-  4: {
-    color: 'light-warning',
-    value: 'Dilaporkan'
-  },
-  5: {
-    color: 'light-danger',
-    value: 'Suspend'
   }
 }
 
@@ -87,29 +67,21 @@ export const columns = (number, ability) => {
             <MoreVertical size={14} className='cursor-pointer' />
           </DropdownToggle>
           <DropdownMenu right>
-            <DropdownItem
-              tag={Link}
-              to={'#'}
-              className='w-100'
-              onClick={() => {
-                window.open(`${process.env.REACT_APP_BASE_FE_URL}/forum/${row.article?.slug}`, '_blank')
-              }}
-            >
-              <Link2 size={14} className='mr-50' />
-              <span className='align-middle'>Link Artikel</span>
-            </DropdownItem>
-            {ability.can('edit', 'report_article') &&
+            {ability.can('edit', 'hasil_cek_fakta') &&
               <DropdownItem
                 tag={Link}
-                to={`/report_article/edit/${row.id}`}
+                to={`/hasil_cek_fakta/edit/${row.id}`}
                 className='w-100'
-                onClick={() => {
-                  store.dispatch(getArticle(row.article))
-                  store.dispatch(getReportArticle(row))
-                }}
+                onClick={() => store.dispatch(getHasilCekFakta(row))}
               >
-                <CheckCircle size={14} className='mr-50' />
-                <span className='align-middle'>Verifikasi</span>
+                <Archive size={14} className='mr-50' />
+                <span className='align-middle'>Edit</span>
+              </DropdownItem>
+            }
+            {ability.can('delete', 'hasil_cek_fakta') &&
+              <DropdownItem className='w-100' onClick={() => handleDelete(row)}>
+                <Trash2 size={14} className='mr-50' />
+                <span className='align-middle'><FormattedMessage id='Delete'/></span>
               </DropdownItem>
             }
           </DropdownMenu>
@@ -118,23 +90,12 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Status',
-      minWidth: '50px',
+      maxWidth: '50px',
       selector: 'status',
       sortable: false,
       cell: row => (
         <Badge className='text-capitalize' color={statusObj[row.status]?.color} pill>
           {statusObj[row.status]?.value}
-        </Badge>
-      )
-    },
-    {
-      name: 'Status Artikel',
-      minWidth: '50px',
-      selector: 'status',
-      sortable: false,
-      cell: row => (
-        <Badge className='text-capitalize' color={statusObjArticle[row.article?.status]?.color} pill>
-          {statusObjArticle[row.article?.status]?.value}
         </Badge>
       )
     },
@@ -145,40 +106,73 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          <Media object className='rounded mr-50' src={`${process.env.REACT_APP_BASE_URL}${row.article?.path_thumbnail ?? ''}`} onError={(e) => (e.target.src = logoDefault)} height='50' width='50' />
-        </div>
-      )
-    },
-    {
-      name: 'Jenis Laporan',
-      minWidth: '150px',
-      selector: 'jenis_laporan',
-      sortable: false,
-      cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
-          {row.jenis_laporan}
+          <Media object className='rounded mr-50' src={`${process.env.REACT_APP_BASE_URL}${row.path_thumbnail ?? ''}`} onError={(e) => (e.target.src = logoDefault)} height='50' width='50' />
         </div>
       )
     },
     {
       name: 'Judul',
-      minWidth: '400px',
-      selector: 'title',
+      minWidth: '300px',
+      selector: 'judul',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center hide-long-text'>
-          {row.article?.title}
+          {row.judul}
         </div>
       )
     },
     {
-      name: 'Tanggal Buat Laporan',
+      name: 'Link',
+      minWidth: '200px',
+      selector: 'link_berita',
+      sortable: false,
+      cell: row => (
+        <a href={row.link_berita} target='_blank' className='d-flex justify-content-left align-items-center hide-long-text'>
+          {row.link_berita}
+        </a>
+      )
+    },
+    {
+      name: 'Penulis',
+      minWidth: '150px',
+      selector: 'author',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.full_name}
+        </div>
+      )
+    },
+    {
+      name: 'Provinsi',
+      minWidth: '150px',
+      selector: 'province',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.province}
+        </div>
+      )
+    },
+    {
+      name: 'Kota / Kabupaten',
+      minWidth: '150px',
+      selector: 'regency',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.regency}
+        </div>
+      )
+    },
+    {
+      name: 'Tanggal Buat',
       minWidth: '200px',
       selector: 'created_date',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {moment(row.created_date).format('DD-MM-YYYY HH:II')}
+          {moment(row.created_date).format('DD-MM-YYYY')}
         </div>
       )
     }

@@ -1,47 +1,16 @@
 import axios from 'axios'
 
-// ** Get all Data
-export const getAllDataKomunitas = (params, cb = null) => {
-  return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/all-data`, {params}).then(response => {
-
-      const {data} = response
-
-      if (data.status) {
-        dispatch({
-          type: 'GET_ALL_DATA_KOMUNITAS',
-          data: data.data,
-          params
-        })
-
-        if (cb) {
-          cb(data.data)
-        }
-      }
-    }).catch(err => {
-      const {response} = err
-      if (response.status === 404) {
-        dispatch({
-          type: 'GET_ALL_DATA_KOMUNITAS',
-          data: [],
-          params
-        })
-      }
-    })
-  }
-}
-
 // ** Get data on page or row change
-export const getDataKomunitas = params => {
+export const getDataHasilCekFakta = params => {
   return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/reff/komunitas`, {params})
+    await axios.get(`${process.env.REACT_APP_BASE_URL}/report/factcheck`, {params})
       .then(response => {
         const {data} = response
 
         if (data.status) {
 
           dispatch({
-            type: 'GET_DATA_KOMUNITAS',
+            type: 'GET_DATA_HASIL_CEK_FAKTA',
             data: data.data.values,
             totalPages: data.data.total,
             params
@@ -51,7 +20,7 @@ export const getDataKomunitas = params => {
         const {response} = err
         if (response.status === 404) {
           dispatch({
-            type: 'GET_DATA_KOMUNITAS',
+            type: 'GET_DATA_HASIL_CEK_FAKTA',
             data: [],
             totalPages: 0,
             params
@@ -62,39 +31,39 @@ export const getDataKomunitas = params => {
 }
 
 // ** Get
-export const getKomunitas = value => {
+export const getHasilCekFakta = value => {
   return async dispatch => {
     dispatch({
-      type: 'GET_KOMUNITAS',
+      type: 'GET_HASIL_CEK_FAKTA',
       selected: value
     })
   }
 }
 
-// ** Add new Komunitas
-export const addKomunitas = params => {
+// ** Add new HasilCekFakta
+export const addHasilCekFakta = params => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_KOMUNITAS'
+      type: 'REQUEST_HASIL_CEK_FAKTA'
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/reff/komunitas`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/report/factcheck`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'ADD_KOMUNITAS',
+            type: 'ADD_HASIL_CEK_FAKTA',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_KOMUNITAS'
+            type: 'SUCCESS_HASIL_CEK_FAKTA'
           })
         } else {
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_HASIL_CEK_FAKTA',
             error: data.message
           })
         }
@@ -106,48 +75,48 @@ export const addKomunitas = params => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_HASIL_CEK_FAKTA',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_HASIL_CEK_FAKTA',
             error: err.message
           })
         }
       })
       .finally(() => {
         dispatch({
-          type: 'RESET_KOMUNITAS'
+          type: 'RESET_HASIL_CEK_FAKTA'
         })
       })
   }
 }
 
-// ** update Komunitas
-export const updateKomunitas = (id, params) => {
+// ** update HasilCekFakta
+export const updateHasilCekFakta = (id, params) => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_KOMUNITAS'
+      type: 'REQUEST_HASIL_CEK_FAKTA'
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/report/factcheck/${id}`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'UPDATE_KOMUNITAS',
+            type: 'UPDATE_HASIL_CEK_FAKTA',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_KOMUNITAS'
+            type: 'SUCCESS_HASIL_CEK_FAKTA'
           })
         } else {
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_HASIL_CEK_FAKTA',
             error: data.message
           })
         }
@@ -159,35 +128,35 @@ export const updateKomunitas = (id, params) => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_HASIL_CEK_FAKTA',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_KOMUNITAS',
+            type: 'ERROR_HASIL_CEK_FAKTA',
             error: err.message
           })
         }
       }).finally(() => {
         dispatch({
-          type: 'RESET_KOMUNITAS'
+          type: 'RESET_HASIL_CEK_FAKTA'
         })
       })
   }
 }
 
 // ** Delete
-export const deleteKomunitas = id => {
+export const deleteHasilCekFakta = id => {
   return (dispatch, getState) => {
     axios
-      .delete(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/${id}`)
+      .delete(`${process.env.REACT_APP_BASE_URL}/report/factcheck/${id}`)
       .then(response => {
         dispatch({
-          type: 'DELETE_KOMUNITAS'
+          type: 'DELETE_HASIL_CEK_FAKTA'
         })
       })
       .finally(() => {
-        dispatch(getDataKomunitas(getState().komunitass.params))
+        dispatch(getDataHasilCekFakta(getState().hasilcekfaktas.params))
       })
       .catch(err => console.log(err))
   }

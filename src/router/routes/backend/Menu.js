@@ -224,6 +224,46 @@ const Menu = [
       action: 'create',
       resource: 'complaint'
     }
+  },
+  {
+    path: '/hasil_cek_fakta/list',
+    component: lazy(() => import('../../../views/backend/hasil_cek_fakta/list')),
+    meta: {
+      action: 'read',
+      resource: 'hasil_cek_fakta'
+    }
+  },
+  {
+    path: '/hasil_cek_fakta/edit/:id',
+    component: lazy(() => import('../../../views/backend/hasil_cek_fakta/save')),
+    meta: {
+      action: 'edit',
+      resource: 'hasil_cek_fakta'
+    }
+  },
+  {
+    path: '/hasil_cek_fakta/save',
+    component: lazy(() => import('../../../views/backend/hasil_cek_fakta/save')),
+    meta: {
+      action: 'create',
+      resource: 'hasil_cek_fakta'
+    }
+  },
+  {
+    path: '/statistik_pengguna/list',
+    component: lazy(() => import('../../../views/backend/statistik_pengguna/list')),
+    meta: {
+      action: 'read',
+      resource: 'statistik_pengguna'
+    }
+  },
+  {
+    path: '/statistik_pengguna_komunitas/list',
+    component: lazy(() => import('../../../views/backend/statistik_pengguna_komunitas/list')),
+    meta: {
+      action: 'read',
+      resource: 'statistik_pengguna_komunitas'
+    }
   }
 ]
 
