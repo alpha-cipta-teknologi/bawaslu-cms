@@ -163,6 +163,28 @@ export const columns = (number, ability) => {
       )
     },
     {
+      name: 'Provinsi',
+      minWidth: '150px',
+      selector: 'province',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.province}
+        </div>
+      )
+    },
+    {
+      name: 'Kota / Kabupaten',
+      minWidth: '150px',
+      selector: 'regency',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.regency}
+        </div>
+      )
+    },
+    {
       name: 'Tanggal Buat',
       minWidth: '200px',
       selector: 'created_date',
