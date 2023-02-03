@@ -59,7 +59,7 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Actions',
-      minWidth: '100px',
+      minWidth: '50px',
       cell: row => (
         <UncontrolledDropdown>
           <DropdownToggle tag='div' className='btn btn-sm'>
@@ -89,7 +89,7 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Status',
-      minWidth: '100px',
+      minWidth: '150px',
       selector: 'status',
       sortable: true,
       cell: row => (
@@ -144,7 +144,7 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Telepon',
-      minWidth: '200px',
+      minWidth: '150px',
       selector: 'telepon',
       sortable: false,
       cell: row => (
@@ -166,7 +166,7 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Tanggal Lahir',
-      minWidth: '200px',
+      minWidth: '150px',
       selector: 'date_of_birth',
       sortable: false,
       cell: row => (
@@ -177,12 +177,45 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Role',
-      minWidth: '200px',
+      minWidth: '150px',
       selector: 'role',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
           {row.role?.role_name}
+        </div>
+      )
+    },
+    {
+      name: 'Komunitas',
+      minWidth: '200px',
+      selector: 'komunitas',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.komunitas?.komunitas_name}
+        </div>
+      )
+    },
+    {
+      name: 'Provinsi',
+      minWidth: '200px',
+      selector: 'province',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.province?.name}
+        </div>
+      )
+    },
+    {
+      name: 'Kota / Kabupaten',
+      minWidth: '200px',
+      selector: 'regency',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.regency?.name}
         </div>
       )
     },

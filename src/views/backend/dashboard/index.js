@@ -3,6 +3,7 @@ import { Row, Col, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody } 
 
 // ** Store & Actions
 import { useDispatch, useSelector } from 'react-redux'
+import { getStatistikDasboard } from './store/action'
 
 // ** Utils
 import { isUserLoggedIn } from '@utils'
@@ -14,6 +15,8 @@ import '@styles/react/apps/app-users.scss'
 import StatsCard from '@src/views/element/StatsCard'
 import StatPengguna from '@src/views/backend/statistik_pengguna/list/Table'
 import StatPenggunaKomunitas from '@src/views/backend/statistik_pengguna_komunitas/list/Table'
+import StatArtikelKomunitas from '@src/views/backend/statistik_artikel_komunitas/list/Table'
+import StatArtikelTema from '@src/views/backend/statistik_artikel_tema/list/Table'
 
 const Dashboard = () => {
 
@@ -23,6 +26,7 @@ const Dashboard = () => {
 
   const [userData, setUserData] = useState(null)
   const [isMounted, setIsMounted] = useState(false)
+  const [statDashboard, setStatDashboard] = useState(null)
 
   const [active, setActive] = useState('1')
 
@@ -39,6 +43,10 @@ const Dashboard = () => {
       setUserData(user.userdata)
     }
 
+    dispatch(getStatistikDasboard(d => {
+      setStatDashboard(d.data)
+    }))
+
     setIsMounted(true)
   }, [])
 
@@ -50,7 +58,7 @@ const Dashboard = () => {
     <div id='dashboard' className="px-1">
       <Row className='match-height'>
         <Col xs='12'>
-          <StatsCard cols={{ xl: '3', sm: '6' }} />
+          <StatsCard cols={{ lg: '4' }} datas={statDashboard} />
         </Col>
         <Col xs='12'>
           <Card>
@@ -73,7 +81,27 @@ const Dashboard = () => {
                       toggle('2')
                     }}
                   >
-                    Komunitas
+                    Pengguna Per Komunitas
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    active={active === '3'}
+                    onClick={() => {
+                      toggle('3')
+                    }}
+                  >
+                    Artikel Per Komunitas
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    active={active === '4'}
+                    onClick={() => {
+                      toggle('4')
+                    }}
+                  >
+                    Artikel Per Tema
                   </NavLink>
                 </NavItem>
               </Nav>
@@ -83,6 +111,12 @@ const Dashboard = () => {
                 </TabPane>
                 <TabPane tabId='2'>
                   <StatPenggunaKomunitas />
+                </TabPane>
+                <TabPane tabId='3'>
+                  <StatArtikelKomunitas />
+                </TabPane>
+                <TabPane tabId='4'>
+                  <StatArtikelTema />
                 </TabPane>
               </TabContent>
             </CardBody>

@@ -1,45 +1,16 @@
 import axios from 'axios'
 
-// ** Get all Data
-export const getAllDataTema = (cb = null) => {
-  return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/reff/tema/all-data`).then(response => {
-
-      const {data} = response
-
-      if (data.status) {
-        dispatch({
-          type: 'GET_ALL_DATA_TEMA',
-          data: data.data
-        })
-
-        if (cb) {
-          cb(data.data)
-        }
-      }
-    }).catch(err => {
-      const {response} = err
-      if (response.status === 404) {
-        dispatch({
-          type: 'GET_ALL_DATA_TEMA',
-          data: []
-        })
-      }
-    })
-  }
-}
-
 // ** Get data on page or row change
-export const getDataTema = params => {
+export const getDataStatistikArtikelTema = params => {
   return async dispatch => {
-    await axios.get(`${process.env.REACT_APP_BASE_URL}/reff/tema`, {params})
+    await axios.get(`${process.env.REACT_APP_BASE_URL}/report/summary/article-tema`, {params})
       .then(response => {
         const {data} = response
 
         if (data.status) {
 
           dispatch({
-            type: 'GET_DATA_TEMA',
+            type: 'GET_DATA_STATISTIK_ARTIKEL_TEMA',
             data: data.data.values,
             totalPages: data.data.total,
             params
@@ -49,7 +20,7 @@ export const getDataTema = params => {
         const {response} = err
         if (response.status === 404) {
           dispatch({
-            type: 'GET_DATA_TEMA',
+            type: 'GET_DATA_STATISTIK_ARTIKEL_TEMA',
             data: [],
             totalPages: 0,
             params
@@ -60,39 +31,39 @@ export const getDataTema = params => {
 }
 
 // ** Get
-export const getTema = value => {
+export const getStatistikArtikelTema = value => {
   return async dispatch => {
     dispatch({
-      type: 'GET_TEMA',
+      type: 'GET_STATISTIK_ARTIKEL_TEMA',
       selected: value
     })
   }
 }
 
-// ** Add new Tema
-export const addTema = params => {
+// ** Add new StatistikArtikelTema
+export const addStatistikArtikelTema = params => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_TEMA'
+      type: 'REQUEST_STATISTIK_ARTIKEL_TEMA'
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/reff/tema`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/report/summary/article-tema`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'ADD_TEMA',
+            type: 'ADD_STATISTIK_ARTIKEL_TEMA',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_TEMA'
+            type: 'SUCCESS_STATISTIK_ARTIKEL_TEMA'
           })
         } else {
           dispatch({
-            type: 'ERROR_TEMA',
+            type: 'ERROR_STATISTIK_ARTIKEL_TEMA',
             error: data.message
           })
         }
@@ -104,48 +75,48 @@ export const addTema = params => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_TEMA',
+            type: 'ERROR_STATISTIK_ARTIKEL_TEMA',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_TEMA',
+            type: 'ERROR_STATISTIK_ARTIKEL_TEMA',
             error: err.message
           })
         }
       })
       .finally(() => {
         dispatch({
-          type: 'RESET_TEMA'
+          type: 'RESET_STATISTIK_ARTIKEL_TEMA'
         })
       })
   }
 }
 
-// ** update Tema
-export const updateTema = (id, params) => {
+// ** update StatistikArtikelTema
+export const updateStatistikArtikelTema = (id, params) => {
   return (dispatch, getState) => {
 
     dispatch({
-      type: 'REQUEST_TEMA'
+      type: 'REQUEST_STATISTIK_ARTIKEL_TEMA'
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/reff/tema/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/report/summary/article-tema/${id}`, params)
       .then(response => {
         const {data} = response
 
         if (data.status) {
           dispatch({
-            type: 'UPDATE_TEMA',
+            type: 'UPDATE_STATISTIK_ARTIKEL_TEMA',
             data: data.data
           })
           dispatch({
-            type: 'SUCCESS_TEMA'
+            type: 'SUCCESS_STATISTIK_ARTIKEL_TEMA'
           })
         } else {
           dispatch({
-            type: 'ERROR_TEMA',
+            type: 'ERROR_STATISTIK_ARTIKEL_TEMA',
             error: data.message
           })
         }
@@ -157,35 +128,35 @@ export const updateTema = (id, params) => {
         if (response?.status === 422) {
           const {data} = response
           dispatch({
-            type: 'ERROR_TEMA',
+            type: 'ERROR_STATISTIK_ARTIKEL_TEMA',
             error: data.message
           })
         } else {
           dispatch({
-            type: 'ERROR_TEMA',
+            type: 'ERROR_STATISTIK_ARTIKEL_TEMA',
             error: err.message
           })
         }
       }).finally(() => {
         dispatch({
-          type: 'RESET_TEMA'
+          type: 'RESET_STATISTIK_ARTIKEL_TEMA'
         })
       })
   }
 }
 
 // ** Delete
-export const deleteTema = id => {
+export const deleteStatistikArtikelTema = id => {
   return (dispatch, getState) => {
     axios
-      .delete(`${process.env.REACT_APP_BASE_URL}/reff/tema/${id}`)
+      .delete(`${process.env.REACT_APP_BASE_URL}/report/summary/article-tema/${id}`)
       .then(response => {
         dispatch({
-          type: 'DELETE_TEMA'
+          type: 'DELETE_STATISTIK_ARTIKEL_TEMA'
         })
       })
       .finally(() => {
-        dispatch(getDataTema(getState().temas.params))
+        dispatch(getDataStatistikArtikelTema(getState().statistikartikelTemas.params))
       })
       .catch(err => console.log(err))
   }

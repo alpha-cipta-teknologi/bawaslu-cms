@@ -31,6 +31,8 @@ import complaints from '@src/views/backend/complaint/store/reducer'
 import hasilcekfaktas from '@src/views/backend/hasil_cek_fakta/store/reducer'
 import statistikpenggunas from '@src/views/backend/statistik_pengguna/store/reducer'
 import statistikpenggunakomunitass from '@src/views/backend/statistik_pengguna_komunitas/store/reducer'
+import statistikartikelkomunitass from '@src/views/backend/statistik_artikel_komunitas/store/reducer'
+import statistikartikeltemas from '@src/views/backend/statistik_artikel_tema/store/reducer'
 
 const rootReducer = combineReducers({
   navigations,
@@ -55,7 +57,9 @@ const rootReducer = combineReducers({
   complaints,
   hasilcekfaktas,
   statistikpenggunas,
-  statistikpenggunakomunitass
+  statistikpenggunakomunitass,
+  statistikartikelkomunitass,
+  statistikartikeltemas
 })
 
 export default rootReducer
