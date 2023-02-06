@@ -17,6 +17,8 @@ import StatPengguna from '@src/views/backend/statistik_pengguna/list/Table'
 import StatPenggunaKomunitas from '@src/views/backend/statistik_pengguna_komunitas/list/Table'
 import StatArtikelKomunitas from '@src/views/backend/statistik_artikel_komunitas/list/Table'
 import StatArtikelTema from '@src/views/backend/statistik_artikel_tema/list/Table'
+import StatPenggunaProvince from '@src/views/backend/statistik_pengguna_provinsi/list/Table'
+import StatPenggunaProvinceKomunitas from '@src/views/backend/statistik_pengguna_provinsi_komunitas/list/Table'
 
 const Dashboard = () => {
 
@@ -104,6 +106,26 @@ const Dashboard = () => {
                     Artikel Per Tema
                   </NavLink>
                 </NavItem>
+                <NavItem>
+                  <NavLink
+                    active={active === '5'}
+                    onClick={() => {
+                      toggle('5')
+                    }}
+                  >
+                    Pengguna Semua Provinsi
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    active={active === '6'}
+                    onClick={() => {
+                      toggle('6')
+                    }}
+                  >
+                    Pengguna Semua Provinsi Per Komunitas
+                  </NavLink>
+                </NavItem>
               </Nav>
               <TabContent className='py-50' activeTab={active}>
                 <TabPane tabId='1'>
@@ -117,6 +139,12 @@ const Dashboard = () => {
                 </TabPane>
                 <TabPane tabId='4'>
                   <StatArtikelTema />
+                </TabPane>
+                <TabPane tabId='5'>
+                  <StatPenggunaProvince />
+                </TabPane>
+                <TabPane tabId='6'>
+                  <StatPenggunaProvinceKomunitas />
                 </TabPane>
               </TabContent>
             </CardBody>

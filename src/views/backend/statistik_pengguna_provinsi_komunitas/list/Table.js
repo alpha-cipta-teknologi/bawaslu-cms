@@ -1,0 +1,147 @@
+// ** React Imports
+import { Fragment, useState, useEffect, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
+
+// ** Columns
+import { columns } from './columns'
+
+// ** Store & Actions
+import { getDataStatistikPenggunaProvinceKomunitas } from '../store/action'
+import {  getAllDataKomunitas } from '@src/views/backend/komunitas/store/action'
+import { useDispatch, useSelector } from 'react-redux'
+import { AbilityContext } from '@src/utility/context/Can'
+
+// ** Third Party Components
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
+import { Line } from 'react-chartjs-2'
+import { Card, CardBody } from 'reactstrap'
+import useDebounce from '@hooks/useDebounce'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
+
+const ClassList = () => {
+  // ** Store Vars
+  const dispatch = useDispatch()
+  const store = useSelector(state => state.statistikpenggunaprovincekomunitass),
+    ability = useContext(AbilityContext)
+
+  // ** States
+  const [searchTerm, setSearchTerm] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(1000)
+  const [mounted, setMounted] = useState(false)
+  const [data, setData] = useState({
+    labels: [],
+    datasets: []
+  })
+
+  const debouncedSearch = useDebounce(searchTerm, 500)
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top'
+      }
+    }
+  }
+
+  // ** redirect
+  const history = useHistory()
+
+  // ** Get data on mount
+  useEffect(() => {
+    if (!store.params) {
+      dispatch(
+        getDataStatistikPenggunaProvinceKomunitas({
+          page: currentPage,
+          perPage: rowsPerPage,
+          q: searchTerm
+        })
+      )
+    } else {
+      dispatch(
+        getDataStatistikPenggunaProvinceKomunitas(store.params)
+      )
+      setSearchTerm(store.params.q)
+      setCurrentPage(store.params.page)
+      setRowsPerPage(store.params.perPage)
+    }
+
+    setMounted(true)
+  }, [dispatch])
+
+  useEffect(() => {
+    if (mounted) {
+      dispatch(
+        getDataStatistikPenggunaProvinceKomunitas({
+          page: currentPage,
+          perPage: rowsPerPage,
+          q: debouncedSearch
+        })
+      )
+    }
+
+  }, [debouncedSearch, currentPage, rowsPerPage])
+
+  useEffect(() => {
+    if (store.data.length > 0) {
+
+      dispatch(getAllDataKomunitas(d => {
+        let labels = null
+        let datasets = []
+        for (const v of d) {
+          if (!labels) {
+            labels = store.data.filter(d => d.komunitas_id === v.id).map(d => d.provinces)
+          }
+
+          const x = Math.floor(Math.random() * 256)
+          const y = Math.floor(Math.random() * 256)
+          const z = Math.floor(Math.random() * 256)
+
+          datasets = datasets.concat({
+            label: v.komunitas_name,
+            data: store.data.filter(d => d.komunitas_id === v.id).map(d => d.total_pengguna),
+            borderColor: `rgb(${x}, ${y}, ${z})`,
+            backgroundColor: `rgb(${x}, ${y}, ${z}, 0.5)`,
+            hidden: true
+          })
+        }
+
+        setData({
+          labels,
+          datasets
+        })
+      }))
+    }
+  }, [store.data])
+
+  return (
+    <Fragment>
+      <Card>
+        <CardBody>
+          <Line options={options} data={data} />
+        </CardBody>
+      </Card>
+    </Fragment>
+  )
+}
+
+export default ClassList

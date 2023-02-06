@@ -33,6 +33,8 @@ import statistikpenggunas from '@src/views/backend/statistik_pengguna/store/redu
 import statistikpenggunakomunitass from '@src/views/backend/statistik_pengguna_komunitas/store/reducer'
 import statistikartikelkomunitass from '@src/views/backend/statistik_artikel_komunitas/store/reducer'
 import statistikartikeltemas from '@src/views/backend/statistik_artikel_tema/store/reducer'
+import statistikpenggunaprovinces from '@src/views/backend/statistik_pengguna_provinsi/store/reducer'
+import statistikpenggunaprovincekomunitass from '@src/views/backend/statistik_pengguna_provinsi_komunitas/store/reducer'
 
 const rootReducer = combineReducers({
   navigations,
@@ -59,7 +61,9 @@ const rootReducer = combineReducers({
   statistikpenggunas,
   statistikpenggunakomunitass,
   statistikartikelkomunitass,
-  statistikartikeltemas
+  statistikartikeltemas,
+  statistikpenggunaprovinces,
+  statistikpenggunaprovincekomunitass
 })
 
 export default rootReducer
