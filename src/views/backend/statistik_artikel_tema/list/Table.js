@@ -75,7 +75,7 @@ const CustomHeader = ({ handleCreate, handlePerPage, rowsPerPage, handleFilter, 
   )
 }
 
-const ClassList = () => {
+const ClassList = ({active}) => {
   // ** Store Vars
   const dispatch = useDispatch()
   const store = useSelector(state => state.statistikartikeltemas),
@@ -100,45 +100,47 @@ const ClassList = () => {
 
   // ** Get data on mount
   useEffect(() => {
-    if (!store.params) {
-      dispatch(
-        getDataStatistikArtikelTema({
-          page: currentPage,
-          perPage: rowsPerPage,
-          q: searchTerm
-        })
-      )
-    } else {
-      dispatch(
-        getDataStatistikArtikelTema(store.params)
-      )
-      setSearchTerm(store.params.q)
-      setCurrentPage(store.params.page)
-      setRowsPerPage(store.params.perPage)
-    }
-
-    setMounted(true)
-
-    dispatch(getProvince(d => {
-      if (d.status) {
-        setDataProvince(d.data.map(r => {
+    if (active) {
+      if (!store.params) {
+        dispatch(
+          getDataStatistikArtikelTema({
+            page: currentPage,
+            perPage: rowsPerPage,
+            q: searchTerm
+          })
+        )
+      } else {
+        dispatch(
+          getDataStatistikArtikelTema(store.params)
+        )
+        setSearchTerm(store.params.q)
+        setCurrentPage(store.params.page)
+        setRowsPerPage(store.params.perPage)
+      }
+  
+      setMounted(true)
+  
+      dispatch(getProvince(d => {
+        if (d.status) {
+          setDataProvince(d.data.map(r => {
+            return {
+              label: r.name,
+              value: r.id
+            }
+          }))
+        }
+      }))
+  
+      dispatch(getAllDataTema(d => {
+        setDataTema(d.map(r => {
           return {
-            label: r.name,
+            label: r.tema_name,
             value: r.id
           }
         }))
-      }
-    }))
-
-    dispatch(getAllDataTema(d => {
-      setDataTema(d.map(r => {
-        return {
-          label: r.tema_name,
-          value: r.id
-        }
       }))
-    }))
-  }, [dispatch])
+    }
+  }, [dispatch, active])
 
   useEffect(() => {
     if (mounted) {

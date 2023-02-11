@@ -132,19 +132,19 @@ const Dashboard = () => {
                   <StatPengguna />
                 </TabPane>
                 <TabPane tabId='2'>
-                  <StatPenggunaKomunitas />
+                  <StatPenggunaKomunitas active={active === '2'} />
                 </TabPane>
                 <TabPane tabId='3'>
-                  <StatArtikelKomunitas />
+                  <StatArtikelKomunitas active={active === '3'} />
                 </TabPane>
                 <TabPane tabId='4'>
-                  <StatArtikelTema />
+                  <StatArtikelTema active={active === '4'} />
                 </TabPane>
                 <TabPane tabId='5'>
-                  <StatPenggunaProvince />
+                  <StatPenggunaProvince active={active === '5'} />
                 </TabPane>
                 <TabPane tabId='6'>
-                  <StatPenggunaProvinceKomunitas />
+                  <StatPenggunaProvinceKomunitas active={active === '6'} />
                 </TabPane>
               </TabContent>
             </CardBody>

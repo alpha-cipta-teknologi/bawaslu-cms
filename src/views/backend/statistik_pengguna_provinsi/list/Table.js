@@ -35,7 +35,7 @@ ChartJS.register(
   Legend
 )
 
-const ClassList = () => {
+const ClassList = ({active}) => {
   // ** Store Vars
   const dispatch = useDispatch()
   const store = useSelector(state => state.statistikpenggunaprovinces),
@@ -75,7 +75,7 @@ const ClassList = () => {
 
   // ** Get data on mount
   useEffect(() => {
-    if (!store.params) {
+    if (active) {
       dispatch(
         getDataStatistikPenggunaProvince({
           page: currentPage,
@@ -83,17 +83,10 @@ const ClassList = () => {
           q: searchTerm
         })
       )
-    } else {
-      dispatch(
-        getDataStatistikPenggunaProvince(store.params)
-      )
-      setSearchTerm(store.params.q)
-      setCurrentPage(store.params.page)
-      setRowsPerPage(store.params.perPage)
     }
 
     setMounted(true)
-  }, [dispatch])
+  }, [dispatch, active])
 
   useEffect(() => {
     if (mounted) {

@@ -75,7 +75,7 @@ const CustomHeader = ({ handleCreate, handlePerPage, rowsPerPage, handleFilter, 
   )
 }
 
-const ClassList = () => {
+const ClassList = ({active}) => {
   // ** Store Vars
   const dispatch = useDispatch()
   const store = useSelector(state => state.statistikpenggunakomunitass),
@@ -100,45 +100,47 @@ const ClassList = () => {
 
   // ** Get data on mount
   useEffect(() => {
-    if (!store.params) {
-      dispatch(
-        getDataStatistikPenggunaKomunitas({
-          page: currentPage,
-          perPage: rowsPerPage,
-          q: searchTerm
-        })
-      )
-    } else {
-      dispatch(
-        getDataStatistikPenggunaKomunitas(store.params)
-      )
-      setSearchTerm(store.params.q)
-      setCurrentPage(store.params.page)
-      setRowsPerPage(store.params.perPage)
-    }
-
-    setMounted(true)
-
-    dispatch(getProvince(d => {
-      if (d.status) {
-        setDataProvince(d.data.map(r => {
+    if (active) {
+      if (!store.params) {
+        dispatch(
+          getDataStatistikPenggunaKomunitas({
+            page: currentPage,
+            perPage: rowsPerPage,
+            q: searchTerm
+          })
+        )
+      } else {
+        dispatch(
+          getDataStatistikPenggunaKomunitas(store.params)
+        )
+        setSearchTerm(store.params.q)
+        setCurrentPage(store.params.page)
+        setRowsPerPage(store.params.perPage)
+      }
+  
+      setMounted(true)
+  
+      dispatch(getProvince(d => {
+        if (d.status) {
+          setDataProvince(d.data.map(r => {
+            return {
+              label: r.name,
+              value: r.id
+            }
+          }))
+        }
+      }))
+  
+      dispatch(getAllDataKomunitas(d => {
+        setDataKomunitas(d.map(r => {
           return {
-            label: r.name,
+            label: r.komunitas_name,
             value: r.id
           }
         }))
-      }
-    }))
-
-    dispatch(getAllDataKomunitas(d => {
-      setDataKomunitas(d.map(r => {
-        return {
-          label: r.komunitas_name,
-          value: r.id
-        }
       }))
-    }))
-  }, [dispatch])
+    }
+  }, [dispatch, active])
 
   useEffect(() => {
     if (mounted) {
