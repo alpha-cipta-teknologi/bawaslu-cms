@@ -24,6 +24,7 @@ import {
 import { Line } from 'react-chartjs-2'
 import { Card, CardHeader, CardTitle, CardBody, CardSubtitle, Row, Col, Label, CustomInput, Button } from 'reactstrap'
 import useDebounce from '@hooks/useDebounce'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 ChartJS.register(
   CategoryScale,
@@ -32,7 +33,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartDataLabels
 )
 
 const ClassList = ({active}) => {
@@ -66,6 +68,18 @@ const ClassList = ({active}) => {
       legend: {
         position: 'top',
         display: false
+      },
+      datalabels: {
+        backgroundColor(context) {
+          return context.dataset.backgroundColor
+        },
+        borderRadius: 4,
+        color: 'white',
+        font: {
+          weight: 'bold'
+        },
+        formatter: Math.round,
+        padding: 6
       }
     }
   }

@@ -10,6 +10,7 @@ import { getDataStatistikPenggunaProvinceKomunitas } from '../store/action'
 import {  getAllDataKomunitas } from '@src/views/backend/komunitas/store/action'
 import { useDispatch, useSelector } from 'react-redux'
 import { AbilityContext } from '@src/utility/context/Can'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 // ** Third Party Components
 import {
@@ -33,7 +34,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartDataLabels
 )
 
 const ClassList = ({active}) => {
@@ -59,6 +61,18 @@ const ClassList = ({active}) => {
     plugins: {
       legend: {
         position: 'top'
+      },
+      datalabels: {
+        backgroundColor(context) {
+          return context.dataset.backgroundColor
+        },
+        borderRadius: 4,
+        color: 'white',
+        font: {
+          weight: 'bold'
+        },
+        formatter: Math.round,
+        padding: 6
       }
     }
   }
