@@ -3,6 +3,11 @@ import axios from 'axios'
 // ** Get data on page or row change
 export const getDataStatistikPenggunaProvinceKomunitas = params => {
   return async dispatch => {
+
+    dispatch({
+      type: 'REQUEST_STATISTIK_PENGGUNA_PROVINCE_KOMUNITAS'
+    })
+
     await axios.get(`${process.env.REACT_APP_BASE_URL}/report/summary/pengguna-province-komunitas`, {params})
       .then(response => {
         const {data} = response
@@ -26,6 +31,10 @@ export const getDataStatistikPenggunaProvinceKomunitas = params => {
             params
           })
         }
+      }).finally(() => {
+        dispatch({
+          type: 'RESET_STATISTIK_PENGGUNA_PROVINCE_KOMUNITAS'
+        })
       })
   }
 }

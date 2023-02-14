@@ -10,6 +10,8 @@ import { getDataStatistikPenggunaProvince } from '../store/action'
 import { useDispatch, useSelector } from 'react-redux'
 import { AbilityContext } from '@src/utility/context/Can'
 
+import Spinner from '@src/layouts/components/Spinner'
+
 // ** Third Party Components
 import {
   Chart as ChartJS,
@@ -19,7 +21,8 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  layouts
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import { Card, CardHeader, CardTitle, CardBody, CardSubtitle, Row, Col, Label, CustomInput, Button } from 'reactstrap'
@@ -55,7 +58,7 @@ const ClassList = ({active}) => {
         label: 'Pengguna',
         data: [],
         borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)'
+        backgroundColor: 'rgba(255, 99, 132, 0.9)'
       }
     ]
   })
@@ -140,6 +143,7 @@ const ClassList = ({active}) => {
       <Card>
         <CardBody>
           <Line options={options} data={data} />
+          {store.loading && data.datasets.length === 0 && <Spinner/>}
         </CardBody>
       </Card>
     </Fragment>

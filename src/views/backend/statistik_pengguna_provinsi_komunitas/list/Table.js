@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AbilityContext } from '@src/utility/context/Can'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 
+import Spinner from '@src/layouts/components/Spinner'
+
 // ** Third Party Components
 import {
   Chart as ChartJS,
@@ -127,7 +129,7 @@ const ClassList = ({active}) => {
             label: v.komunitas_name,
             data: store.data.filter(d => d.komunitas_id === v.id).map(d => d.total_pengguna),
             borderColor: `rgb(${x}, ${y}, ${z})`,
-            backgroundColor: `rgb(${x}, ${y}, ${z}, 0.5)`,
+            backgroundColor: `rgb(${x}, ${y}, ${z}, 0.9)`,
             hidden: true
           })
         }
@@ -145,6 +147,7 @@ const ClassList = ({active}) => {
       <Card>
         <CardBody>
           <Line options={options} data={data} />
+          {store.loading && data.datasets.length === 0 && <Spinner/>}
         </CardBody>
       </Card>
     </Fragment>
