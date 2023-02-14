@@ -78,7 +78,15 @@ export const addTema = params => {
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/reff/tema`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/reff/tema`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_TEMA',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -116,6 +124,10 @@ export const addTema = params => {
       })
       .finally(() => {
         dispatch({
+          type: 'PROGRESS_TEMA',
+          progress: null
+        })
+        dispatch({
           type: 'RESET_TEMA'
         })
       })
@@ -131,7 +143,15 @@ export const updateTema = (id, params) => {
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/reff/tema/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/reff/tema/${id}`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_TEMA',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -167,6 +187,10 @@ export const updateTema = (id, params) => {
           })
         }
       }).finally(() => {
+        dispatch({
+          type: 'PROGRESS_TEMA',
+          progress: null
+        })
         dispatch({
           type: 'RESET_TEMA'
         })

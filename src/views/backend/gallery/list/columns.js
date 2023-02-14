@@ -111,7 +111,7 @@ export const columns = (number, ability) => {
       selector: 'folder_name',
       sortable: false,
       cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
+        <div className='d-flex justify-content-left align-items-center hide-long-text'>
           {row.folder_name}
         </div>
       )

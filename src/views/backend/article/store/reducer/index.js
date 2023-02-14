@@ -9,7 +9,8 @@ const initialState = {
   error: null,
   success: false,
   add: null,
-  update: null
+  update: null,
+  progress: null
 }
 
 const reducers = (state = initialState, action) => {
@@ -54,6 +55,11 @@ const reducers = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.error
+      }
+    case 'PROGRESS_ARTICLE':
+      return {
+        ...state,
+        progress: action.progress
       }
     default:
       return { ...state }

@@ -49,7 +49,15 @@ export const addHasilCekFakta = params => {
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/report/factcheck`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/report/factcheck`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_HASIL_CEK_FAKTA',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -87,6 +95,10 @@ export const addHasilCekFakta = params => {
       })
       .finally(() => {
         dispatch({
+          type: 'PROGRESS_HASIL_CEK_FAKTA',
+          progress: null
+        })
+        dispatch({
           type: 'RESET_HASIL_CEK_FAKTA'
         })
       })
@@ -102,7 +114,15 @@ export const updateHasilCekFakta = (id, params) => {
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/report/factcheck/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/report/factcheck/${id}`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_HASIL_CEK_FAKTA',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -138,6 +158,10 @@ export const updateHasilCekFakta = (id, params) => {
           })
         }
       }).finally(() => {
+        dispatch({
+          type: 'PROGRESS_HASIL_CEK_FAKTA',
+          progress: null
+        })
         dispatch({
           type: 'RESET_HASIL_CEK_FAKTA'
         })

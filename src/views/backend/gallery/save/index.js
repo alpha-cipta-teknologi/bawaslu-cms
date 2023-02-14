@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 // ** Third Party Components
 import { User, Check, X, UploadCloud } from 'react-feather'
-import { Card, CardBody, Row, Col, Button, Label, FormGroup, Input, Form, Media } from 'reactstrap'
+import { Card, CardBody, Row, Col, Button, Label, FormGroup, Input, Form, Media, Progress } from 'reactstrap'
 import { useForm, Controller } from 'react-hook-form'
 import classnames from 'classnames'
 import 'cleave.js/dist/addons/cleave-phone.us'
@@ -99,6 +99,7 @@ const GallerySave = () => {
 
       setPhotos(store.selected.detail.map(data => {
         return {
+          id: data.id,
           link: `${process.env.REACT_APP_BASE_URL}${data.path_image}`,
           isCloud: true
         }
@@ -151,7 +152,7 @@ const GallerySave = () => {
       } 
 
       if (id) {
-        datas.append('image_delete', JSON.stringify(deletePhotos))
+        datas.append('detail_delete', JSON.stringify(deletePhotos))
         dispatch(updateGallery(id, datas))
       } else {
         dispatch(addGallery(datas))
@@ -168,11 +169,19 @@ const GallerySave = () => {
       reader.onerror = () => console.log('file reading has failed')
       reader.onload = () => {
       // Do whatever you want with the file contents
-        const blobURL = URL.createObjectURL(file)
 
-        setImage({
-          file, link: blobURL
-        })
+        if ((file.size / (1024 * 1024)) > parseFloat(process.env.REACT_APP_MAX_IMAGE)) {
+          toast.error(
+            <ToastGallery text={`${file.name} Ukuran terlalu besar. Max 10MB`} />,
+            { transition: Slide, hideProgressBar: true, autoClose: 5000 }
+          )
+        } else {
+          const blobURL = URL.createObjectURL(file)
+
+          setImage({
+            file, link: blobURL
+          })
+        }
       }
       reader.readAsDataURL(file)
     })
@@ -183,7 +192,7 @@ const GallerySave = () => {
     const oldDeletePhotos = deletePhotos
     
     if (oldPhotos[key].isCloud) {
-      oldDeletePhotos.push(oldPhotos[key].file.id)
+      oldDeletePhotos.push(oldPhotos[key].id)
     }
 
     oldPhotos = oldPhotos.filter((d, k) => k !== key)
@@ -199,8 +208,17 @@ const GallerySave = () => {
     if (files.length <= 0) return
 
     reader.onload = function () {
-      const blobURL = URL.createObjectURL(files[0])
-      setLogo({file: files[0], link: blobURL})
+
+      if ((files[0].size / (1024 * 1024)) > parseFloat(process.env.REACT_APP_MAX_IMAGE)) {
+        toast.error(
+          <ToastGallery text={`${files[0].name} Ukuran terlalu besar. Max 10MB`} />,
+          { transition: Slide, hideProgressBar: true, autoClose: 5000 }
+        )
+      } else {
+        const blobURL = URL.createObjectURL(files[0])
+        setLogo({file: files[0], link: blobURL})
+      }
+      
     }
     reader.readAsDataURL(files[0])
   }
@@ -341,8 +359,13 @@ const GallerySave = () => {
                 </Col>
               </Row>
               <Row>
+                {store.progress &&
+                  <Col sm='12'>
+                    <Progress value={store.progress}>{`${store.progress}%`}</Progress>
+                  </Col>
+                }
                 <Col className='d-flex flex-sm-row flex-column mt-2'>
-                  <Button type='submit' color='primary' className='mb-1 mb-sm-0 mr-0 mr-sm-1'>
+                  <Button type='submit' color='primary' className='mb-1 mb-sm-0 mr-0 mr-sm-1' disabled={store.loading}>
                     <FormattedMessage id='Save'/>
                   </Button>
                   <Link to='/gallery/list'>

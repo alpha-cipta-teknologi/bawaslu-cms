@@ -78,7 +78,15 @@ export const addKomunitas = params => {
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/reff/komunitas`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/reff/komunitas`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_KOMUNITAS',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -116,6 +124,10 @@ export const addKomunitas = params => {
       })
       .finally(() => {
         dispatch({
+          type: 'PROGRESS_KOMUNITAS',
+          progress: null
+        })
+        dispatch({
           type: 'RESET_KOMUNITAS'
         })
       })
@@ -131,7 +143,15 @@ export const updateKomunitas = (id, params) => {
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/reff/komunitas/${id}`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_KOMUNITAS',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -167,6 +187,10 @@ export const updateKomunitas = (id, params) => {
           })
         }
       }).finally(() => {
+        dispatch({
+          type: 'PROGRESS_KOMUNITAS',
+          progress: null
+        })
         dispatch({
           type: 'RESET_KOMUNITAS'
         })

@@ -9,7 +9,7 @@ import { getAllDataCategory } from '@src/views/backend/category/store/action'
 
 // ** Third Party Components
 import { User, Check, X } from 'react-feather'
-import { Card, CardBody, Row, Col, Button, Label, FormGroup, Input, Form, Media } from 'reactstrap'
+import { Card, CardBody, Row, Col, Button, Label, FormGroup, Input, Form, Media, Progress } from 'reactstrap'
 import { useForm, Controller } from 'react-hook-form'
 import classnames from 'classnames'
 import 'cleave.js/dist/addons/cleave-phone.us'
@@ -159,8 +159,16 @@ const BawasluUpdateSave = () => {
     if (files.length <= 0) return
 
     reader.onload = function () {
-      const blobURL = URL.createObjectURL(files[0])
-      setLogo({file: files[0], link: blobURL})
+
+      if ((files[0].size / (1024 * 1024)) > parseFloat(process.env.REACT_APP_MAX_IMAGE)) {
+        toast.error(
+          <ToastContent text={`${files[0].name} Ukuran terlalu besar. Max 10MB`} />,
+          { transition: Slide, hideProgressBar: true, autoClose: 5000 }
+        )
+      } else {
+        const blobURL = URL.createObjectURL(files[0])
+        setLogo({file: files[0], link: blobURL})
+      }
     }
     reader.readAsDataURL(files[0])
   }
@@ -314,8 +322,13 @@ const BawasluUpdateSave = () => {
                 </Col>
               </Row>
               <Row>
+                {store.progress &&
+                  <Col sm='12'>
+                    <Progress value={store.progress}>{`${store.progress}%`}</Progress>
+                  </Col>
+                }
                 <Col className='d-flex flex-sm-row flex-column mt-2'>
-                  <Button type='submit' color='primary' className='mb-1 mb-sm-0 mr-0 mr-sm-1'>
+                  <Button type='submit' color='primary' className='mb-1 mb-sm-0 mr-0 mr-sm-1' disabled={store.loading}>
                     <FormattedMessage id='Save'/>
                   </Button>
                   <Link to='/bawaslu_update/list'>
