@@ -28,6 +28,7 @@ import {
 import { Line } from 'react-chartjs-2'
 import { Card, CardBody } from 'reactstrap'
 import useDebounce from '@hooks/useDebounce'
+import { getNumberUnit } from '@utils'
 
 ChartJS.register(
   CategoryScale,
@@ -73,7 +74,9 @@ const ClassList = ({active}) => {
         font: {
           weight: 'bold'
         },
-        formatter: Math.round,
+        formatter(value) {
+          return getNumberUnit(value)
+        },
         padding: 6
       }
     }

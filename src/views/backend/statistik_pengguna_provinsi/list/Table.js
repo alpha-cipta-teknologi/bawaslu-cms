@@ -21,13 +21,13 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
-  layouts
+  Legend
 } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import { Card, CardHeader, CardTitle, CardBody, CardSubtitle, Row, Col, Label, CustomInput, Button } from 'reactstrap'
 import useDebounce from '@hooks/useDebounce'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { getNumberUnit } from '@utils'
 
 ChartJS.register(
   CategoryScale,
@@ -81,7 +81,9 @@ const ClassList = ({active}) => {
         font: {
           weight: 'bold'
         },
-        formatter: Math.round,
+        formatter(value) {
+          return getNumberUnit(value)
+        },
         padding: 6
       }
     }

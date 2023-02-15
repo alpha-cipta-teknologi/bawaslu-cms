@@ -1,3 +1,5 @@
+import { getNumberUnit } from '@utils'
+
 export const columns = (number, ability) => {
   return [
     {
@@ -45,7 +47,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {row.jumlah_article}
+          {getNumberUnit(row.jumlah_article)}
         </div>
       )
     }
