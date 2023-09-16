@@ -2,48 +2,48 @@ import classnames from 'classnames'
 import Avatar from '@components/avatar'
 import { TrendingUp, User, Image, AlertOctagon } from 'react-feather'
 import { Card, CardHeader, CardTitle, CardBody, CardText, Row, Col, Media } from 'reactstrap'
-import { getNumberUnit } from '@utils'
+import { convertToRupiah } from '@utils'
 import { Link } from 'react-router-dom'
 
 const StatsCard = ({ cols, datas }) => {
   const data = [
     {
-      title: getNumberUnit(datas?.pengguna || 0),
+      title: convertToRupiah(datas?.pengguna || 0),
       subtitle: 'Pengguna',
       color: 'light-info',
       icon: <User size={24} />,
       link: '/user/list'
     },
     {
-      title: getNumberUnit(datas?.gallery || 0),
+      title: convertToRupiah(datas?.gallery || 0),
       subtitle: 'Galeri',
       color: 'light-info',
       icon: <Image size={24} />,
       link: '/gallery/list'
     },
     {
-      title: getNumberUnit(datas?.article || 0),
+      title: convertToRupiah(datas?.article || 0),
       subtitle: 'Forum Artikel',
       color: 'light-success',
       icon: <TrendingUp size={24} />,
       link: '/article/list'
     },
     {
-      title: getNumberUnit(datas?.bawaslu_update || 0),
+      title: convertToRupiah(datas?.bawaslu_update || 0),
       subtitle: 'Bawaslu Update',
       color: 'light-success',
       icon: <TrendingUp size={24} />,
       link: '/bawaslu_update/list'
     },
     {
-      title: getNumberUnit(datas?.laporan_aduan || 0),
+      title: convertToRupiah(datas?.laporan_aduan || 0),
       subtitle: 'Pengaduan Daring',
       color: 'light-warning',
       icon: <AlertOctagon size={24} />,
       link: '/complaint/list'
     },
     {
-      title: getNumberUnit(datas?.laporan_article || 0),
+      title: convertToRupiah(datas?.laporan_article || 0),
       subtitle: 'Pengaduan Artikel',
       color: 'light-warning',
       icon: <AlertOctagon size={24} />,

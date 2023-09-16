@@ -1,4 +1,4 @@
-import { getNumberUnit } from '@utils'
+import { convertToRupiah } from '@utils'
 
 export const columns = (number, ability) => {
   return [
@@ -36,7 +36,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {getNumberUnit(row.lansia)}
+          {convertToRupiah(row.lansia)}
         </div>
       )
     },
@@ -47,7 +47,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {getNumberUnit(row.pensiun)}
+          {convertToRupiah(row.pensiun)}
         </div>
       )
     },
@@ -58,7 +58,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {getNumberUnit(row.pra_pensiun)}
+          {convertToRupiah(row.pra_pensiun)}
         </div>
       )
     },
@@ -69,7 +69,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {getNumberUnit(row.paruh_baya)}
+          {convertToRupiah(row.paruh_baya)}
         </div>
       )
     },
@@ -80,7 +80,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {getNumberUnit(row.pekerja_awal)}
+          {convertToRupiah(row.pekerja_awal)}
         </div>
       )
     },
@@ -91,7 +91,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {getNumberUnit(row.muda)}
+          {convertToRupiah(row.muda)}
         </div>
       )
     },
@@ -102,7 +102,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {getNumberUnit(row.anak_anak)}
+          {convertToRupiah(row.anak_anak)}
         </div>
       )
     },
@@ -113,7 +113,7 @@ export const columns = (number, ability) => {
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {getNumberUnit(row.total_pengguna)}
+          {convertToRupiah(row.total_pengguna)}
         </div>
       )
     }

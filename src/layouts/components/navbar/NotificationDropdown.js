@@ -24,7 +24,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getDataNotification, updateNotification } from '@src/views/backend/notification/store/action'
 
 import logoDefault from '@src/assets/images/avatars/picture-blank.png'
-import { getNumberUnit } from '@utils'
+import { convertToRupiah } from '@utils'
 
 const NotificationDropdown = () => {
 
@@ -221,7 +221,7 @@ const NotificationDropdown = () => {
         <Bell size={21} />
         {totalNotif > 0 &&
           <Badge pill color='danger' className='badge-up'>
-            {getNumberUnit(totalNotif)}
+            {convertToRupiah(totalNotif)}
           </Badge>
         }
       </DropdownToggle>
@@ -231,7 +231,7 @@ const NotificationDropdown = () => {
             <h4 className='notification-title mb-0 mr-auto'>Notifikasi</h4>
             {totalNotif > 0 &&
               <Badge tag='div' color='light-primary' pill>
-                {getNumberUnit(totalNotif)} Baru
+                {convertToRupiah(totalNotif)} Baru
               </Badge>
             }
           </DropdownItem>

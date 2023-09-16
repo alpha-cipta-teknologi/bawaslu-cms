@@ -27,7 +27,7 @@ import { Line } from 'react-chartjs-2'
 import { Card, CardHeader, CardTitle, CardBody, CardSubtitle, Row, Col, Label, CustomInput, Button } from 'reactstrap'
 import useDebounce from '@hooks/useDebounce'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-import { getNumberUnit } from '@utils'
+import { convertToRupiah } from '@utils'
 
 ChartJS.register(
   CategoryScale,
@@ -82,7 +82,7 @@ const ClassList = ({active}) => {
           weight: 'bold'
         },
         formatter(value) {
-          return getNumberUnit(value)
+          return convertToRupiah(value)
         },
         padding: 6
       }
