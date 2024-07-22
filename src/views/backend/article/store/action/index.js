@@ -76,7 +76,15 @@ export const addArticle = params => {
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/forum/article`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/forum/article`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_ARTICLE',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -114,6 +122,10 @@ export const addArticle = params => {
       })
       .finally(() => {
         dispatch({
+          type: 'PROGRESS_ARTICLE',
+          progress: null
+        })
+        dispatch({
           type: 'RESET_ARTICLE'
         })
       })
@@ -121,7 +133,7 @@ export const addArticle = params => {
 }
 
 // ** update Article
-export const updateArticle = (id, params) => {
+export const updateArticle = (id, params, cb = null) => {
   return (dispatch, getState) => {
 
     dispatch({
@@ -129,7 +141,15 @@ export const updateArticle = (id, params) => {
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/forum/article/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/forum/article/${id}`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_ARTICLE',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -141,6 +161,10 @@ export const updateArticle = (id, params) => {
           dispatch({
             type: 'SUCCESS_ARTICLE'
           })
+
+          if (cb) {
+            cb(data)
+          }
         } else {
           dispatch({
             type: 'ERROR_ARTICLE',
@@ -165,6 +189,10 @@ export const updateArticle = (id, params) => {
           })
         }
       }).finally(() => {
+        dispatch({
+          type: 'PROGRESS_ARTICLE',
+          progress: null
+        })
         dispatch({
           type: 'RESET_ARTICLE'
         })

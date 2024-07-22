@@ -134,6 +134,7 @@ const ContentSave = () => {
       datas.append('header', data.header)
       datas.append('title', data.title)
       datas.append('seq', data.seq)
+      datas.append('sort_description', data.sort_description)
       datas.append('link_url', data.link_url)
       datas.append('description', desc)
       datas.append('image', logo.file)
@@ -335,6 +336,22 @@ const ContentSave = () => {
                           />
                         )
                       }}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm='12'>
+                  <FormGroup>
+                    <Label for='sort_description'>Deskripsi Pendek</Label>
+                    <Input
+                      id='sort_description'
+                      name='sort_description'
+                      type='textarea'
+                      defaultValue={isEdit ? store.selected.sort_description : ''}
+                      placeholder='Deskripsi Pendek'
+                      innerRef={register({ required: false })}
+                      className={classnames({
+                        'is-invalid': errors.sort_description
+                      })}
                     />
                   </FormGroup>
                 </Col>

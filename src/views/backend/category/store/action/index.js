@@ -76,7 +76,15 @@ export const addCategory = params => {
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/reff/category`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/reff/category`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_CATEGORY',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -114,6 +122,10 @@ export const addCategory = params => {
       })
       .finally(() => {
         dispatch({
+          type: 'PROGRESS_CATEGORY',
+          progress: null
+        })
+        dispatch({
           type: 'RESET_CATEGORY'
         })
       })
@@ -129,7 +141,15 @@ export const updateCategory = (id, params) => {
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/reff/category/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/reff/category/${id}`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_CATEGORY',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -165,6 +185,10 @@ export const updateCategory = (id, params) => {
           })
         }
       }).finally(() => {
+        dispatch({
+          type: 'PROGRESS_CATEGORY',
+          progress: null
+        })
         dispatch({
           type: 'RESET_CATEGORY'
         })

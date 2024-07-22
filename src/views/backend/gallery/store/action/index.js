@@ -76,7 +76,15 @@ export const addGallery = params => {
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/reff/gallery`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/reff/gallery`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_GALLERY',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -98,7 +106,7 @@ export const addGallery = params => {
       .catch(err => {
 
         const {response} = err
-        
+
         if (response?.status === 422) {
           const {data} = response
           dispatch({
@@ -113,6 +121,10 @@ export const addGallery = params => {
         }
       })
       .finally(() => {
+        dispatch({
+          type: 'PROGRESS_GALLERY',
+          progress: null
+        })
         dispatch({
           type: 'RESET_GALLERY'
         })
@@ -129,7 +141,15 @@ export const updateGallery = (id, params) => {
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/reff/gallery/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/reff/gallery/${id}`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_GALLERY',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -165,6 +185,10 @@ export const updateGallery = (id, params) => {
           })
         }
       }).finally(() => {
+        dispatch({
+          type: 'PROGRESS_GALLERY',
+          progress: null
+        })
         dispatch({
           type: 'RESET_GALLERY'
         })

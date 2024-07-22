@@ -6,10 +6,12 @@ import { useParams, Link, useHistory } from 'react-router-dom'
 import { addArticle, updateArticle } from '../store/action'
 import { useSelector, useDispatch } from 'react-redux'
 import { getAllDataCategory } from '@src/views/backend/category/store/action'
+import { getAllDataTema } from '@src/views/backend/tema/store/action'
+import { getAllDataKomunitas } from '@src/views/backend/komunitas/store/action'
 
 // ** Third Party Components
 import { User, Check, X } from 'react-feather'
-import { Card, CardBody, Row, Col, Button, Label, FormGroup, Input, Form, Media } from 'reactstrap'
+import { Card, CardBody, Row, Col, Button, Label, FormGroup, Input, Form, Media, Progress } from 'reactstrap'
 import { useForm, Controller } from 'react-hook-form'
 import classnames from 'classnames'
 import 'cleave.js/dist/addons/cleave-phone.us'
@@ -64,6 +66,8 @@ const ArticleSave = () => {
   // ** States & Vars
   const store = useSelector(state => state.articles),
     categorys = useSelector(state => state.categorys),
+    temas = useSelector(state => state.temas),
+    komunitass = useSelector(state => state.komunitass),
     dispatch = useDispatch(),
     { id } = useParams(),
     intl = useIntl()
@@ -74,7 +78,8 @@ const ArticleSave = () => {
   // ** State
   const [data, setData] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState({label: "Select...", value: 3})
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [selectedKomunitas, setSelectedKomunitas] = useState(null)
+  const [selectedTema, setSelectedTema] = useState(null)
   const [logo, setLogo] = useState({file: null, link: null})
   const [desc, setDesc] = useState('')
 
@@ -90,9 +95,17 @@ const ArticleSave = () => {
     {
       value: 3,
       label: "Draft"
+    },
+    {
+      value: 4,
+      label: "Dilaporkan"
+    },
+    {
+      value: 5,
+      label: "Suspend"
     }
   ]
-
+  
   // ** redirect
   const history = useHistory()
 
@@ -101,7 +114,8 @@ const ArticleSave = () => {
     if (store.selected !== null && store.selected !== undefined) {
       const find = status.find(r => r.value === store.selected.status)
       setSelectedStatus(find)
-      setSelectedCategory({label: store.selected.category_name, value: store.selected.category_name})
+      setSelectedKomunitas({label: store.selected.komunitas?.komunitas_name, value: store.selected.komunitas?.id})
+      setSelectedTema({label: store.selected.tema?.tema_name, value: store.selected.tema?.id})
 
       const linkLogo = `${process.env.REACT_APP_BASE_URL}${store.selected.path_thumbnail}`
       setLogo({...logo, link: linkLogo})
@@ -109,6 +123,8 @@ const ArticleSave = () => {
     }
 
     dispatch(getAllDataCategory())
+    dispatch(getAllDataTema())
+    dispatch(getAllDataKomunitas())
     
   }, [dispatch])
 
@@ -132,12 +148,29 @@ const ArticleSave = () => {
 
     if (isObjEmpty(errors)) {
 
+      if (!selectedKomunitas) {
+        toast.error(
+          <ToastContent text={'Komunitas wajib di isi'} />,
+          { transition: Slide, hideProgressBar: true, autoClose: 3000 }
+        )
+        return 
+      }
+
+      if (!selectedTema) {
+        toast.error(
+          <ToastContent text={'Tema wajib di isi'} />,
+          { transition: Slide, hideProgressBar: true, autoClose: 3000 }
+        )
+        return 
+      }
+
       setData(data)
 
       const datas = new FormData()
 
       datas.append('status', selectedStatus.value)
-      datas.append('category_name', selectedCategory?.label)
+      datas.append('komunitas_id', JSON.stringify(selectedKomunitas))
+      datas.append('tema_id', JSON.stringify(selectedTema))
       datas.append('title', data.title)
       datas.append('description', desc)
       datas.append('image', logo.file)
@@ -159,8 +192,16 @@ const ArticleSave = () => {
     if (files.length <= 0) return
 
     reader.onload = function () {
-      const blobURL = URL.createObjectURL(files[0])
-      setLogo({file: files[0], link: blobURL})
+
+      if ((files[0].size / (1024 * 1024)) > parseFloat(process.env.REACT_APP_MAX_IMAGE)) {
+        toast.error(
+          <ToastContent text={`${files[0].name} Ukuran terlalu besar. Max 10MB`} />,
+          { transition: Slide, hideProgressBar: true, autoClose: 5000 }
+        )
+      } else {
+        const blobURL = URL.createObjectURL(files[0])
+        setLogo({file: files[0], link: blobURL})
+      }
     }
     reader.readAsDataURL(files[0])
   }
@@ -219,15 +260,15 @@ const ArticleSave = () => {
                     />
                   </FormGroup>
                 </Col>
-                <Col sm='12' md='8'>
+                <Col sm='12' md='4'>
                   <FormGroup>
-                    <Label for='category_name'>Kategori</Label>
+                    <Label for='komunitas_id'>Komunitas</Label>
                     <Controller
-                      name='category_name'
-                      id='category_name'
+                      name='komunitas_id'
+                      id='komunitas_id'
                       control={control}
-                      invalid={data !== null && (data.category_name === undefined || data.category_name === null)}
-                      defaultValue={selectedCategory}
+                      invalid={data !== null && (data.komunitas_id === undefined || data.komunitas_id === null)}
+                      defaultValue={selectedKomunitas}
                       render={({value, onChange}) => {
 
                         return (
@@ -236,16 +277,50 @@ const ArticleSave = () => {
                             theme={selectThemeColors}
                             className='react-select'
                             classNamePrefix='select'
-                            options={categorys.allData.map(d => {
+                            options={komunitass.allData.map(d => {
                               return {
-                                label: d.category_name,
-                                value: d.category_name
+                                label: d.komunitas_name,
+                                value: d.id
                               }
                             })}
-                            value={selectedCategory}
+                            value={selectedKomunitas}
                             onChange={data => {
                               onChange(data)
-                              setSelectedCategory(data)
+                              setSelectedKomunitas(data)
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col sm='12' md='4'>
+                  <FormGroup>
+                    <Label for='tema_id'>Tema</Label>
+                    <Controller
+                      name='tema_id'
+                      id='tema_id'
+                      control={control}
+                      invalid={data !== null && (data.tema_id === undefined || data.tema_id === null)}
+                      defaultValue={selectedTema}
+                      render={({value, onChange}) => {
+
+                        return (
+                          <Select
+                            isClearable={false}
+                            theme={selectThemeColors}
+                            className='react-select'
+                            classNamePrefix='select'
+                            options={temas.allData.map(d => {
+                              return {
+                                label: d.tema_name,
+                                value: d.id
+                              }
+                            })}
+                            value={selectedTema}
+                            onChange={data => {
+                              onChange(data)
+                              setSelectedTema(data)
                             }}
                           />
                         )
@@ -314,8 +389,13 @@ const ArticleSave = () => {
                 </Col>
               </Row>
               <Row>
+                {store.progress &&
+                  <Col sm='12'>
+                    <Progress value={store.progress}>{`${store.progress}%`}</Progress>
+                  </Col>
+                }
                 <Col className='d-flex flex-sm-row flex-column mt-2'>
-                  <Button type='submit' color='primary' className='mb-1 mb-sm-0 mr-0 mr-sm-1'>
+                  <Button type='submit' color='primary' className='mb-1 mb-sm-0 mr-0 mr-sm-1' disabled={store.loading}>
                     <FormattedMessage id='Save'/>
                   </Button>
                   <Link to='/article/list'>

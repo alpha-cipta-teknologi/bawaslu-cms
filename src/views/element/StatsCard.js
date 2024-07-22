@@ -1,54 +1,77 @@
 import classnames from 'classnames'
 import Avatar from '@components/avatar'
-import { TrendingUp, User, Box, DollarSign } from 'react-feather'
+import { TrendingUp, User, Image, AlertOctagon } from 'react-feather'
 import { Card, CardHeader, CardTitle, CardBody, CardText, Row, Col, Media } from 'reactstrap'
+import { convertToRupiah } from '@utils'
+import { Link } from 'react-router-dom'
 
-const StatsCard = ({ cols }) => {
+const StatsCard = ({ cols, datas }) => {
   const data = [
     {
-      title: '8.549k',
+      title: convertToRupiah(datas?.pengguna || 0),
       subtitle: 'Pengguna',
       color: 'light-info',
-      icon: <User size={24} />
+      icon: <User size={24} />,
+      link: '/user/list'
     },
     {
-      title: '1.423k',
-      subtitle: 'Gallery',
-      color: 'light-danger',
-      icon: <Box size={24} />
+      title: convertToRupiah(datas?.gallery || 0),
+      subtitle: 'Galeri',
+      color: 'light-info',
+      icon: <Image size={24} />,
+      link: '/gallery/list'
     },
     {
-      title: '230k',
+      title: convertToRupiah(datas?.article || 0),
       subtitle: 'Forum Artikel',
-      color: 'light-primary',
-      icon: <TrendingUp size={24} />
+      color: 'light-success',
+      icon: <TrendingUp size={24} />,
+      link: '/article/list'
     },
     {
-      title: '230k',
+      title: convertToRupiah(datas?.bawaslu_update || 0),
       subtitle: 'Bawaslu Update',
-      color: 'light-primary',
-      icon: <TrendingUp size={24} />
+      color: 'light-success',
+      icon: <TrendingUp size={24} />,
+      link: '/bawaslu_update/list'
+    },
+    {
+      title: convertToRupiah(datas?.laporan_aduan || 0),
+      subtitle: 'Pengaduan Daring',
+      color: 'light-warning',
+      icon: <AlertOctagon size={24} />,
+      link: '/complaint/list'
+    },
+    {
+      title: convertToRupiah(datas?.laporan_article || 0),
+      subtitle: 'Pengaduan Artikel',
+      color: 'light-warning',
+      icon: <AlertOctagon size={24} />,
+      link: '/report_article/list'
     }
   ]
 
   const renderData = () => {
     return data.map((item, index) => {
       const margin = Object.keys(cols)
+
       return (
         <Col
           key={index}
           {...cols}
           className={classnames({
-            [`mb-2 mb-${margin[0]}-0`]: index !== data.length - 1
+            [`mb-2 mb-${margin[0]}-1`]: index !== data.length - 1
           })}
         >
-          <Media>
-            <Avatar color={item.color} icon={item.icon} className='mr-2' />
-            <Media className='my-auto' body>
-              <h4 className='font-weight-bolder mb-0'>{item.title}</h4>
-              <CardText className='font-small-3 mb-0'>{item.subtitle}</CardText>
+          <Link to={item.link}>
+            <Media>
+              <Avatar color={item.color} icon={item.icon} className='mr-2' />
+              <Media className='my-auto' body>
+                <h4 className='font-weight-bolder mb-0'>{item.title}</h4>
+                <CardText className='font-small-3 mb-0'>{item.subtitle}</CardText>
+              </Media>
             </Media>
-          </Media>
+          </Link>
         </Col>
       )
     })

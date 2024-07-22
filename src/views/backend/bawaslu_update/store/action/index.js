@@ -76,7 +76,15 @@ export const addBawasluUpdate = params => {
     })
 
     axios
-      .post(`${process.env.REACT_APP_BASE_URL}/forum/bawaslu-update`, params)
+      .post(`${process.env.REACT_APP_BASE_URL}/forum/bawaslu-update`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_BAWASLU_UPDATE',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -114,6 +122,10 @@ export const addBawasluUpdate = params => {
       })
       .finally(() => {
         dispatch({
+          type: 'PROGRESS_BAWASLU_UPDATE',
+          progress: null
+        })
+        dispatch({
           type: 'RESET_BAWASLU_UPDATE'
         })
       })
@@ -129,7 +141,15 @@ export const updateBawasluUpdate = (id, params) => {
     })
 
     axios
-      .put(`${process.env.REACT_APP_BASE_URL}/forum/bawaslu-update/${id}`, params)
+      .put(`${process.env.REACT_APP_BASE_URL}/forum/bawaslu-update/${id}`, params, {
+        onUploadProgress: progressEvent => {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          dispatch({
+            type: 'PROGRESS_BAWASLU_UPDATE',
+            progress
+          })
+        }
+      })
       .then(response => {
         const {data} = response
 
@@ -165,6 +185,10 @@ export const updateBawasluUpdate = (id, params) => {
           })
         }
       }).finally(() => {
+        dispatch({
+          type: 'PROGRESS_BAWASLU_UPDATE',
+          progress: null
+        })
         dispatch({
           type: 'RESET_BAWASLU_UPDATE'
         })

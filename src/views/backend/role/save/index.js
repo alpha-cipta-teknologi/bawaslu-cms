@@ -205,7 +205,7 @@ const RoleSave = () => {
                       name='status'
                       id='status'
                       control={control}
-                      defaultValue="A"
+                      defaultValue="1"
                       invalid={data !== null && (data.status === undefined || data.status === null)}
                     >
                       <option value='1'>Active</option>

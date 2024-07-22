@@ -7,7 +7,7 @@ import { store } from '@store/storeConfig/store'
 
 // ** Third Party Components
 import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Media } from 'reactstrap'
-import { MoreVertical, Trash2, Archive } from 'react-feather'
+import { MoreVertical, Trash2, Archive, Link2 } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 
 import Swal from 'sweetalert2'
@@ -48,6 +48,14 @@ const statusObj = {
   3: {
     color: 'light-secondary',
     value: 'Draft'
+  },
+  4: {
+    color: 'light-warning',
+    value: 'Dilaporkan'
+  },
+  5: {
+    color: 'light-danger',
+    value: 'Suspend'
   }
 }
 
@@ -111,13 +119,24 @@ export const columns = (number, ability) => {
       )
     },
     {
-      name: 'Kategori',
+      name: 'Komunitas',
       minWidth: '200px',
-      selector: 'category_name',
+      selector: 'komunitas',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {row.category_name}
+          {row.komunitas?.komunitas_name}
+        </div>
+      )
+    },
+    {
+      name: 'Tema',
+      minWidth: '200px',
+      selector: 'tema',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center hide-long-text'>
+          {row.tema?.tema_name}
         </div>
       )
     },
@@ -144,13 +163,35 @@ export const columns = (number, ability) => {
       )
     },
     {
+      name: 'Provinsi',
+      minWidth: '150px',
+      selector: 'province',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.province}
+        </div>
+      )
+    },
+    {
+      name: 'Kota / Kabupaten',
+      minWidth: '150px',
+      selector: 'regency',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.regency}
+        </div>
+      )
+    },
+    {
       name: 'Tanggal Buat',
       minWidth: '200px',
       selector: 'created_date',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
-          {moment(row.created_date).format('DD-MM-YYYY')}
+          {moment(row.created_date).format('DD-MM-YYYY HH:mm')}
         </div>
       )
     },

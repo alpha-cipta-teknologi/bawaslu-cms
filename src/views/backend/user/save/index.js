@@ -3,7 +3,7 @@ import { useState, useEffect, Fragment } from 'react'
 import { useParams, Link, useHistory } from 'react-router-dom'
 
 // ** Store & Actions
-import { addUser, updateUser } from '../store/action'
+import { addUser, updateUser, getProvince, getRegency } from '../store/action'
 import { useSelector, useDispatch } from 'react-redux'
 import { getAllDataRole } from '@src/views/backend/role/store/action'
 
@@ -76,6 +76,8 @@ const UserSave = () => {
   const [selectedRegency, setSelectedRegency] = useState(null)
   const [logo, setLogo] = useState({file: null, link: null})
   const [restrictRoll, setRestrictRoll] = useState([])
+  const [dataProvince, setDataProvince] = useState([])
+  const [dataRegency, setDataRegency] = useState([])
 
   // ** redirect
   const history = useHistory()
@@ -90,10 +92,35 @@ const UserSave = () => {
       setLogo({...logo, link: linkLogo})
 
       setSelectedRole({label: store.selected.role?.role_name, value: store.selected.role?.role_id})
+      setSelectedProvince({label: store.selected.province?.name, value: store.selected.province?.id})
+      setSelectedRegency({label: store.selected.regency?.name, value: store.selected.regency?.id})
       
+      if (store.selected.province?.id) {
+        dispatch(getRegency(store.selected.province?.id, d => {
+          if (d.status) {
+            setDataRegency(d.data.map(r => {
+              return {
+                label: r.name,
+                value: r.id
+              }
+            }))
+          }
+        }))
+      }
     }
 
     dispatch(getAllDataRole())
+
+    dispatch(getProvince(d => {
+      if (d.status) {
+        setDataProvince(d.data.map(r => {
+          return {
+            label: r.name,
+            value: r.id
+          }
+        }))
+      }
+    }))
   }, [dispatch])
 
   useEffect(() => {
@@ -352,11 +379,21 @@ const UserSave = () => {
                             theme={selectThemeColors}
                             className='react-select'
                             classNamePrefix='select'
-                            options={[]}
+                            options={dataProvince}
                             value={selectedProvince}
                             onChange={data => {
                               onChange(data)
                               setSelectedProvince(data)
+                              dispatch(getRegency(data.value, d => {
+                                if (d.status) {
+                                  setDataRegency(d.data.map(r => {
+                                    return {
+                                      label: r.name,
+                                      value: r.id
+                                    }
+                                  }))
+                                }
+                              }))
                             }}
                           />
                         )
@@ -381,7 +418,7 @@ const UserSave = () => {
                             theme={selectThemeColors}
                             className='react-select'
                             classNamePrefix='select'
-                            options={[]}
+                            options={dataRegency}
                             value={selectedRegency}
                             onChange={data => {
                               onChange(data)
@@ -603,11 +640,21 @@ const UserSave = () => {
                             theme={selectThemeColors}
                             className='react-select'
                             classNamePrefix='select'
-                            options={[]}
+                            options={dataProvince}
                             value={selectedProvince}
                             onChange={data => {
                               onChange(data)
                               setSelectedProvince(data)
+                              dispatch(getRegency(data.value, d => {
+                                if (d.status) {
+                                  setDataRegency(d.data.map(r => {
+                                    return {
+                                      label: r.name,
+                                      value: r.id
+                                    }
+                                  }))
+                                }
+                              }))
                             }}
                           />
                         )
@@ -632,7 +679,7 @@ const UserSave = () => {
                             theme={selectThemeColors}
                             className='react-select'
                             classNamePrefix='select'
-                            options={[]}
+                            options={dataRegency}
                             value={selectedRegency}
                             onChange={data => {
                               onChange(data)

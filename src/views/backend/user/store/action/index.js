@@ -212,3 +212,37 @@ export const checkUserUsername = value => {
       })
   }
 }
+
+// ** Add get province
+export const getProvince = (cb = null) => {
+  return (dispatch, getState) => {
+
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/area/province`)
+      .then(response => {
+
+        const {data} = response
+
+        if (cb) {
+          cb(data)
+        }
+      })
+  }
+}
+
+// ** Add get regency
+export const getRegency = (provinceid, cb = null) => {
+  return (dispatch, getState) => {
+
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/area/regency/${provinceid}`)
+      .then(response => {
+
+        const {data} = response
+
+        if (cb) {
+          cb(data)
+        }
+      })
+  }
+}

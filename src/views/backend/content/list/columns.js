@@ -111,7 +111,7 @@ export const columns = (number, ability) => {
       selector: 'header',
       sortable: false,
       cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
+        <div className='d-flex justify-content-left align-items-center hide-long-text'>
           {row.header}
         </div>
       )
@@ -122,8 +122,19 @@ export const columns = (number, ability) => {
       selector: 'title',
       sortable: false,
       cell: row => (
-        <div className='d-flex justify-content-left align-items-center'>
+        <div className='d-flex justify-content-left align-items-center hide-long-text'>
           {row.title}
+        </div>
+      )
+    },
+    {
+      name: 'Deskripsi Pendek',
+      maxWidth: '200px',
+      selector: 'sort_description',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center hide-long-text'>
+          {row.sort_description}
         </div>
       )
     },

@@ -155,9 +155,9 @@ const NavbarBookmarks = props => {
         </NavItem>
       </ul>
       <div className='bookmark-wrapper d-flex align-items-center mt-1'>
-        <h4>
+        <h5>
           <FormattedMessage id={'Welcome'} />, {profile.selected && profile.selected.full_name}
-        </h4>
+        </h5>
       </div>
     </Fragment>
   )

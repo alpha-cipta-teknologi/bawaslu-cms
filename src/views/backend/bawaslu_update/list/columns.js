@@ -7,7 +7,7 @@ import { store } from '@store/storeConfig/store'
 
 // ** Third Party Components
 import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Media } from 'reactstrap'
-import { MoreVertical, Trash2, Archive } from 'react-feather'
+import { MoreVertical, Trash2, Archive, Link2 } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 
 import Swal from 'sweetalert2'
@@ -134,12 +134,34 @@ export const columns = (number, ability) => {
     },
     {
       name: 'Penulis',
-      minWidth: '200px',
+      minWidth: '150px',
       selector: 'author',
       sortable: false,
       cell: row => (
         <div className='d-flex justify-content-left align-items-center'>
           {row.author.full_name}
+        </div>
+      )
+    },
+    {
+      name: 'Provinsi',
+      minWidth: '150px',
+      selector: 'province',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.province}
+        </div>
+      )
+    },
+    {
+      name: 'Kota / Kabupaten',
+      minWidth: '150px',
+      selector: 'regency',
+      sortable: false,
+      cell: row => (
+        <div className='d-flex justify-content-left align-items-center'>
+          {row.author.regency}
         </div>
       )
     },
